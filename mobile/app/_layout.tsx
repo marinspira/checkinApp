@@ -33,10 +33,9 @@ export default function RootLayout() {
       <StatusBar barStyle="dark-content" />
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="(auth)/guest" options={{ headerShown: false }} />
+        <Stack.Screen name="(auth)/signup" options={{ headerShown: false }} />
         <Stack.Screen name="(auth)/owner" options={{ headerShown: false }} />
-        <Stack.Screen name="(auth)/staff" options={{ headerShown: false }} />
-        <Stack.Screen name="(auth)/checkin" options={{ headerShown: false }} />
+        <Stack.Screen name="(auth)/login" options={{ headerShown: false }} />
         <Stack.Screen name="(guest)" options={{ headerShown: false }} />
       </Stack>
     </ThemeProvider>

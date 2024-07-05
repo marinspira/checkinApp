@@ -27,7 +27,7 @@ export default function Staff() {
         <ScrollView style={styles.container}>
             <ContainerPaddingHorizontal>
                 <CustomInput icon={<Ionicons name="search-outline" size={24} color="black" />} placeholder="Where do you want to go?" />
-                <WidgetJoinList data={positions} />
+                <WidgetJoinList data={positions} btnText="Ver mais"/>
             </ContainerPaddingHorizontal>
         </ScrollView>
     )

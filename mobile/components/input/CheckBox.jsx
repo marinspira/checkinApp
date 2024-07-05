@@ -20,8 +20,8 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     checkbox: {
-        width: 24,
-        height: 24,
+        width: 13,
+        height: 13,
         borderWidth: 2,
         justifyContent: 'center',
         alignItems: 'center',
@@ -31,8 +31,8 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.green,
     },
     checkboxInner: {
-        width: 12,
-        height: 12,
+        width: 0,
+        height: 0,
         backgroundColor: '#fff',
     },
     label: {

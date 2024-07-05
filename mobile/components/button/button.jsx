@@ -1,11 +1,11 @@
 import { Link } from "expo-router";
 import { StyleSheet, Text, TextInput, TouchableHighlight, View } from "react-native";
 
-export default function Btn({ text, link, onPress }) {
+export default function Btn({ text, link, onPress, customStyle }) {
     if (link) {
         return (
             <Link href={link}>
-                <TouchableHighlight style={[styles.btn, { backgroundColor: "#000" }]}>
+                <TouchableHighlight style={[styles.btn, customStyle, { backgroundColor: "#000" }]}>
                     <Text style={styles.btnText}>{text}</Text>
                 </TouchableHighlight>
             </Link>
@@ -14,7 +14,7 @@ export default function Btn({ text, link, onPress }) {
 
     if (onPress) {
         return (
-            <TouchableHighlight onPress={onPress} style={[styles.btn, { backgroundColor: "#000" }]}>
+            <TouchableHighlight onPress={onPress} style={[styles.btn, customStyle, { backgroundColor: "#000" }]}>
                 <Text style={styles.btnText}>{text}</Text>
             </TouchableHighlight>
         )

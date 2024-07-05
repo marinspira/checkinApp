@@ -9,12 +9,12 @@ export default function index() {
     const [view, setView] = useState('');
 
     return (
-        <AuthView>
-            <Link href="/(auth)/guest">
+        <AuthView logo={true}>
+            <Link href="/(auth)/signup">
                 <View style={[styles.btn]}>
                     <View>
                         <Text style={styles.btnText}>Sou Hóspede</Text>
-                        <Text style={styles.btnTextBold}>Fazer Check in</Text>
+                        <Text style={styles.btnTextBold}>Check in</Text>
                     </View>
                     <MaterialIcons name="airplane-ticket" size={30} color="black" />
                 </View>
@@ -22,8 +22,8 @@ export default function index() {
             <Link href="/(auth)/staff">
                 <View style={[styles.btn]}>
                     <View>
-                        <Text style={styles.btnText}>Sou Staff</Text>
-                        <Text style={styles.btnTextBold}>Ver Atividades</Text>
+                        <Text style={styles.btnText}>Sou voluntário</Text>
+                        <Text style={styles.btnTextBold}>Voluntariados</Text>
                     </View>
                     <Octicons name="workflow" size={24} color="black" />
                 </View>

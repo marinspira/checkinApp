@@ -1,7 +1,7 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { Colors } from "../../constants/Colors";
 
-export default function CustomInput({ label, placeholder, style2, icon, onChangeText }) {
+export default function CustomInput({ label, placeholder, style2, icon, onChangeText, error, password }) {
     return (
         <View>
             {label && <Text style={styles.label}>{label}</Text>}
@@ -11,10 +11,14 @@ export default function CustomInput({ label, placeholder, style2, icon, onChange
                 </View>
             )}
             <TextInput
-                style={style2 ? styles.input2 : styles.input}
+                style={[
+                    (style2 ? styles.input2 : styles.input),
+                    (error && { borderColor: 'red', borderWidth: 2 })
+                ]}
                 placeholder={placeholder}
                 placeholderTextColor="#888"
                 onChangeText={onChangeText}
+                secureTextEntry={password}
             >
             </TextInput>
         </View>
@@ -36,14 +40,14 @@ const styles = StyleSheet.create({
         fontWeight: "700"
     },
     input2: {
-        borderWidth: 1,
+        borderBottomWidth: 1,
         borderColor: "#c9c9c9",
-        padding: 12,
+        paddingVertical: 12,
         marginTop: 5,
         marginBottom: 20,
         fontSize: 18,
-        borderRadius: 8,
-        backgroundColor: Colors.gray
+        // borderRadius: 8,
+        // backgroundColor: "#f1f1f1"
     },
     icon: {
         position: 'absolute',

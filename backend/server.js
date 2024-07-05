@@ -13,10 +13,7 @@ const app = express()
 const PORT = process.env.PORT || 5000;
 
 app.use(
-    cors({
-        origin: 'https://2guu2pg-anonymous-8081.exp.direct',
-        preflightContinue: true,
-    }),
+    cors(),
 );
 
 app.use(express.json())

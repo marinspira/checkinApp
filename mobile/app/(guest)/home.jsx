@@ -27,6 +27,7 @@ export default function Home() {
                 {avatar: profileDefault},
                 {avatar: profileDefault},
             ],
+            imgs: [defaultImg, defaultImg],
             date: 'HOJE'
         }
     ]
@@ -67,7 +68,7 @@ export default function Home() {
                     </Text>
                     <AntDesign name="arrowright" size={18} color="black" />
                 </View>
-                <WidgetJoinList data={events} />
+                <WidgetJoinList data={events} btnText="Join"/>
             </ContainerPaddingHorizontal>
         </ScrollView>
     )

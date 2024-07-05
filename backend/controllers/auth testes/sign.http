@@ -2,11 +2,8 @@ POST http://localhost:8000/api/auth/signup
 Content-Type: application/json
 
 {
-    "fullName": "maria",
-    "email": "maria@gmail.com",
+    "fullName": "mardsdsdsia",
+    "email": "dudu",
     "password": "2345",
-    "confirmPassword": "2345",
-    "gender": "female",
-    "profilePic": "",
     "appearPermission": true
 }

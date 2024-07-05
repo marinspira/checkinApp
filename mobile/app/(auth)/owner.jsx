@@ -5,7 +5,7 @@ import AuthView from "../../components/containers/AuthView";
 
 export default function Owner() {
   return (
-    <AuthView>
+    <AuthView logo={true}>
       <CustomInput placeholder="E-mail" />
       <CustomInput placeholder="Senha" />
       <Btn text="Acessar" />

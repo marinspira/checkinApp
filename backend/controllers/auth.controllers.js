@@ -8,17 +8,15 @@ export const signup = async (req, res) => {
             fullName,
             email,
             password,
-            confirmPassword,
-            gender,
-            profilePic,
+            // confirmPassword,
             appearPermission
         } = req.body;
 
         console.log(req.body)
 
-        if (password !== confirmPassword) {
-            return res.status(400).json({ error: "Password don't match" });
-        }
+        // if (password !== confirmPassword) {
+        //     return res.status(400).json({ error: "Password don't match" });
+        // }
 
         const user = await User.findOne({ email });
 
@@ -29,17 +27,12 @@ export const signup = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        const boyProfilePic = `https://avatar.iran.liara.run/public/boy?email=${email}`;
-        const girlProfilePic = `https://avatar.iran.liara.run/public/girl?email=${email}`;
-
         // Create a new user with the provided data and hashed password
         const newUser = new User({
             fullName,
             email,
             password: hashedPassword,
-            confirmPassword,
-            gender,
-            profilePic: profilePic ? profilePic : (gender === "male" ? boyProfilePic : girlProfilePic),
+            // confirmPassword,
             appearPermission,
         });
 
@@ -53,7 +46,6 @@ export const signup = async (req, res) => {
                 _id: newUser._id,
                 fullName: newUser.fullName,
                 email: newUser.email,
-                profilePic: newUser.profilePic
             });
         } else {
             res.status(400).json({ error: "Invalid user data" })
