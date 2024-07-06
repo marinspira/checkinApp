@@ -1,14 +1,14 @@
 import { ScrollView, StatusBar, StyleSheet, Text, View } from "react-native";
-import { Colors } from "../../constants/Colors";
-import ProfilePhoto from "../../components/profileImg/profile";
-import GuestsProfileImgSlide from "../../components/profileImgSlide";
-import WidgetJoinList from "../../components/joinWidgetList";
-import ContainerPaddingHorizontal from "../../components/containers/paddingHorinzontal";
-import { FontSizes } from '../../constants/FontSizes.ts'
+import { Colors } from "@/constants/Colors.ts";
+import ProfilePhoto from "@/components/profileImg/profile.jsx";
+import GuestsProfileImgSlide from "@/components/profileImgSlide/index.jsx";
+import WidgetJoinList from "@/components/joinWidgetList/index.jsx";
+import ContainerPaddingHorizontal from "@/components/containers/paddingHorinzontal.jsx";
+import { FontSizes } from '@/constants/FontSizes.ts'
 import { AntDesign } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
-import profileDefault from '../../assets/images/unnamed.png'
-import defaultImg from '../../assets/images/ilus.jpg';
+import profileDefault from '@/assets/images/unnamed.png'
+import defaultImg from '@/assets/images/ilus.jpg';
 
 export default function Home() {
 
@@ -22,10 +22,10 @@ export default function Home() {
             img: defaultImg,
             name: 'Aula de surf',
             people: [
-                {avatar: profileDefault},
-                {avatar: profileDefault},
-                {avatar: profileDefault},
-                {avatar: profileDefault},
+                { avatar: profileDefault },
+                { avatar: profileDefault },
+                { avatar: profileDefault },
+                { avatar: profileDefault },
             ],
             imgs: [defaultImg, defaultImg],
             date: 'HOJE'
@@ -34,7 +34,7 @@ export default function Home() {
 
     return (
         <ScrollView style={styles.container}>
-            <StatusBar barStyle="dark-content" />
+            <StatusBar barStyle="light-content" />
             <View style={styles.header}>
                 <ContainerPaddingHorizontal>
                     <View
@@ -47,8 +47,8 @@ export default function Home() {
                         <ProfilePhoto user={user} />
                         <Entypo name="notification" size={24} color="white" />
                     </View>
-                    <Text style={[FontSizes.title, {color:"#fff"}]}>Hello, {user.name}!</Text>
-                    <Text style={[FontSizes.normalText, {color:"#fff"}]}>Sinta-se conectado com a sua estadia! ☀️</Text>
+                    <Text style={[FontSizes.title, { color: "#fff" }]}>Hello, {user.name}!</Text>
+                    <Text style={[FontSizes.normalText, { color: "#fff" }]}>Sinta-se conectado com a sua estadia! ☀️</Text>
                 </ContainerPaddingHorizontal>
             </View>
             <ContainerPaddingHorizontal>
@@ -63,12 +63,14 @@ export default function Home() {
             <ContainerPaddingHorizontal>
                 <Text style={FontSizes.subtitle}>Events</Text>
                 <View style={styles.newEventBtn}>
-                    <Text style={FontSizes.body}>
-                        Sugerir um evento
-                    </Text>
-                    <AntDesign name="arrowright" size={18} color="black" />
+                    <View style={styles.btnEvent}>
+                        <Text style={[FontSizes.body, {color: 'white', marginTop: 3}]}>
+                            Sugerir um evento
+                        </Text>
+                        <AntDesign name="arrowright" size={16} color="white" />
+                    </View>
                 </View>
-                <WidgetJoinList data={events} btnText="Join"/>
+                <WidgetJoinList data={events} btnText="Join" />
             </ContainerPaddingHorizontal>
         </ScrollView>
     )
@@ -77,7 +79,7 @@ export default function Home() {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: Colors.gray,
-        flex: 1
+        flex: 1,
     },
     header: {
         backgroundColor: Colors.lilac,
@@ -101,6 +103,17 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'start',
-        marginTop: 5
+        marginTop: 5,
+    },
+    btnEvent: {
+        backgroundColor: Colors.lilac,
+        display: 'flex',
+        flexDirection: 'row',
+        gap: 10,
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        borderRadius: 3,
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 })

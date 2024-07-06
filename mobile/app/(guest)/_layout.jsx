@@ -1,9 +1,21 @@
-import { Tabs } from "expo-router";
+import { router, Tabs } from "expo-router";
 import { FontAwesome, AntDesign, Ionicons } from '@expo/vector-icons';
-import { Colors } from "../../constants/Colors";
+import { Colors } from "@/constants/Colors";
 import { StyleSheet, View } from "react-native";
+import { useContext, useEffect } from "react";
+import { AuthProvider, AuthContext } from '@/contexts/AuthContext/AuthContext'
+
 
 export default function TabsLayout() {
+
+    const { user } = useContext(AuthContext)
+
+    useEffect(() => {
+        if (!user) {
+            router.push('/index');
+        }
+    }, [user]);
+
     return (
         <Tabs
             initialRouteName="home"
@@ -66,7 +78,7 @@ export default function TabsLayout() {
                 name="staff"
                 options={{
                     href: {
-                        pathname: "/(guest)/staff",
+                        pathname: "./(screens)/staff",
                     },
                     headerShown: true,
                     headerStyle: {

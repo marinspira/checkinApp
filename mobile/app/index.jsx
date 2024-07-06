@@ -10,6 +10,7 @@ export default function index() {
 
     return (
         <AuthView logo={true}>
+            <StatusBar barStyle="dark-content" />
             <Link href="/(auth)/signup">
                 <View style={[styles.btn]}>
                     <View>
@@ -53,7 +54,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingVertical: 10,
         borderColor: "#000",
-        // borderWidth: 1,
         marginBottom: 5,
         width: 250,
         borderRadius: 10,

@@ -33,7 +33,7 @@ export default function AuthView({ children, logo, mainText, handleSubmit, alter
 
 const styles = StyleSheet.create({
     title: {
-        fontSize: 80,
+        fontSize: 70,
         textAlign: "center",
         marginBottom: 20,
         fontWeight: "700",

@@ -1,13 +1,21 @@
 import { StatusBar } from "expo-status-bar";
 import { FlatList, ScrollView, StyleSheet, View } from "react-native";
-import { Colors } from "../../constants/Colors";
-import ContainerPaddingHorizontal from "../../components/containers/paddingHorinzontal";
+import { Colors } from "@/constants/Colors";
+import ContainerPaddingHorizontal from "@/components/containers/paddingHorinzontal";
 import profileDefault from '../../assets/images/unnamed.png'
-import ImageInput from "../../components/input/ImageInput";
-import AuthView from "../../components/containers/AuthView";
-import CustomInput from "../../components/input/Input";
+import ImageInput from "@/components/input/ImageInput";
+import AuthView from "@/components/containers/AuthView";
+import CustomInput from "@/components/input/Input";
+import { CustomCheckbox } from "@/components/input/CheckBox";
+import { useState } from "react";
 
 export default function Account() {
+    const [fullName, setFullName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [appearPermission, setAppearPermission] = useState(true);
+    const [errorMessage, setErrorMessage] = useState("");
+    const [erro, setErro] = useState(false)
 
     function handleInputChange(key, value) {
         switch (key) {
@@ -23,28 +31,35 @@ export default function Account() {
     }
 
     const user = {
-        name: "Maria",
-        profileImg: profileDefault
+        fullName: fullName,
+        email: email,
+        password: password
+    }
+
+    const profile = {
+        profileImg: profileDefault,
+        // document: documentImg || documentPDF
+        
     }
 
     const data = [
         {
             id: '1',
             placeholder: "João da Silva Ferreira",
-            label: "Your full name",
+            label: "Your name",
             key: "fullName"
         },
         {
             id: '2',
             placeholder: "Email@hostelApp.com",
-            label: "Your best e-mail",
+            label: "Your email",
             key: "email",
             keyboardType: "email-address"
         },
         {
             id: '3',
             placeholder: 'Your password here',
-            label: "Password",
+            label: "Your password",
             key: "password",
             password: true
         },
@@ -82,6 +97,11 @@ export default function Account() {
                     style={styles.form}
                     scrollEnabled={false}
                 />}
+                <CustomCheckbox
+                    isChecked={appearPermission}
+                    onToggle={() => setAppearPermission(!appearPermission)}
+                    label="I want to appear and view other guests."
+                />
             </AuthView>
         </View>
     )

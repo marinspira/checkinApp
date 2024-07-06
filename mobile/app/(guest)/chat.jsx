@@ -1,12 +1,12 @@
 import { StatusBar } from "expo-status-bar";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
-import defaultImg from '../../assets/images/unnamed.png'
-import { Colors } from "../../constants/Colors";
-import CustomInput from "../../components/input/Input";
+import defaultImg from '@/assets/images/unnamed.png'
+import { Colors } from "@/constants/Colors";
+import CustomInput from "@/components/input/Input";
 import { Ionicons } from '@expo/vector-icons';
-import GuestsProfileImgSlide from "../../components/profileImgSlide";
-import ContainerPaddingHorizontal from "../../components/containers/paddingHorinzontal";
-import ChatComponent from "../../components/chat";
+import GuestsProfileImgSlide from "@/components/profileImgSlide";
+import ContainerPaddingHorizontal from "@/components/containers/paddingHorinzontal";
+import ChatComponent from "@/components/chat";
 
 export default function Chat() {
 

@@ -1,9 +1,8 @@
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
-import ContainerPaddingHorizontal from "../../components/containers/paddingHorinzontal";
-import defaultImg from '../../assets/images/unnamed.png'
-import { FontSizes } from "../../constants/FontSizes";
-import Chat from "../../components/chat";
-import { Colors } from "../../constants/Colors";
+import ContainerPaddingHorizontal from "@/components/containers/paddingHorinzontal";
+import defaultImg from '@/assets/images/unnamed.png'
+import Chat from "@/components/chat";
+import { Colors } from "@/constants/Colors";
 
 export default function Notifications() {
 

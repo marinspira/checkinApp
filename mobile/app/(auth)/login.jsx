@@ -67,15 +67,13 @@ export default function Login() {
 
             setErrorMessage("");
 
-            // const response = await login(email, password);
+            const response = await login(email, password);
 
-            // if (response.success) {
-            //     router.push("/(guest)/home");
-            // } else {
-            //     setErrorMessage(response.error || "Something went wrong. Please try again.");
-            // }
-
-            router.push("/(guest)/home");
+            if (response.success) {
+                router.push("/(guest)/home");
+            } else {
+                setErrorMessage(response.error || "Something went wrong. Please try again.");
+            }
 
         } catch (error) {
             setErrorMessage("An unexpected error occurred. Please try again.");
