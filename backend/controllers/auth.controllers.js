@@ -64,7 +64,7 @@ export const login = async (req, res) => {
         const isPasswordCorrect = await bcrypt.compare(password, user?.password || "")
 
         if (!user) {
-            return res.status(400).json({ error: "email didnt finded" })
+            return res.status(400).json({ error: "Email did not find" })
         }
 
         if (!isPasswordCorrect) {

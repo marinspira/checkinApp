@@ -42,12 +42,11 @@ const styles = StyleSheet.create({
     input2: {
         borderBottomWidth: 1,
         borderColor: "#c9c9c9",
-        paddingVertical: 12,
+        paddingTop: 12,
+        paddingBottom: 8,
         marginTop: 5,
         marginBottom: 20,
-        fontSize: 18,
-        // borderRadius: 8,
-        // backgroundColor: "#f1f1f1"
+        fontSize: 16,
     },
     icon: {
         position: 'absolute',

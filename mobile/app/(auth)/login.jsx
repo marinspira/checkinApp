@@ -1,17 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { FlatList, StyleSheet, Text, View, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { Colors } from "../../constants/Colors";
 import AuthView from "../../components/containers/AuthView";
-import { CustomCheckbox } from "../../components/input/CheckBox";
 import CustomInput from "../../components/input/Input";
 import Btn from "../../components/button/button";
 import { router } from "expo-router";
+import isValidEmail from "../../utils/isValidEmail";
+import AuthContext from "../../contexts/AuthContext/AuthContext";
 
 export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
+
+    const { login } = useContext(AuthContext);
 
     function handleInputChange(key, value) {
         switch (key) {
@@ -33,32 +37,49 @@ export default function Login() {
 
     const data = [
         {
-            id: '2',
+            id: '1',
             placeholder: "Email@hostelApp.com",
             label: "Your best e-mail",
             key: "email"
         },
         {
-            id: '3',
+            id: '2',
             placeholder: 'Your password here',
             label: "Password",
-            key: "password"
+            key: "password",
+            password: true
         },
     ];
 
     async function handleSubmit() {
 
-        // console.log(user);
+        isValidEmail(email)
 
-        // const response = await fetch('http://localhost:8000/api/auth/login', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify(user)
-        // });
+        try {
+            if (!email || !password) {
+                setErrorMessage("All fields are required");
+                return;
+            }
 
-        router.push("/(guest)/home");
+            if (!isValidEmail(email)) {
+                setErrorMessage("Invalid email format");
+                return;
+            }
+
+            setErrorMessage("");
+
+            const response = await login(email, password);
+
+            if (response.success) {
+                router.push("/(guest)/home");
+            } else {
+                setErrorMessage(response.error || "Something went wrong. Please try again.");
+            }
+
+        } catch (error) {
+            setErrorMessage("An unexpected error occurred. Please try again.");
+            console.log(error);
+        }
 
     }
 
@@ -78,12 +99,14 @@ export default function Login() {
                                 label={item.label}
                                 value={user[item.key]}
                                 onChangeText={value => handleInputChange(item.key, value)}
+                                password={item?.password}
                             />
                         )}
                         style={styles.form}
                         scrollEnabled={false}
                     />}
-                    <Text>Forgot your password?</Text>
+                    <Text style={styles.passwordText}>Forgot your password?</Text>
+                    {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
                 </View>
                 <Btn customStyle={styles.btn} onPress={handleSubmit} text="Check in" />
                 <Text onPress={() => router.push("/(auth)/signup")} style={styles.subtitle}>Not have an account yet?</Text>
@@ -107,6 +130,17 @@ const styles = StyleSheet.create({
         textAlign: "center",
         marginBottom: 20,
         fontWeight: "700",
+    },
+    errorText: {
+        color: 'red',
+        textAlign: 'center',
+        marginTop: 30,
+    },
+    passwordText: {
+        fontWeight: '600',
+        marginTop: 15,
+        marginBottom: 10, 
+        fontSize: 16
     },
     btn: {
         marginTop: -35,

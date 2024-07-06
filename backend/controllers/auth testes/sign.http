@@ -1,9 +1,9 @@
-POST http://localhost:8000/api/auth/signup
+POST http://172.17.177.248:8000/api/auth/signup
 Content-Type: application/json
 
 {
     "fullName": "mardsdsdsia",
-    "email": "dudu",
+    "email": "hhbhbhb",
     "password": "2345",
     "appearPermission": true
 }

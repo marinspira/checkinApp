@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { FlatList, StyleSheet, Text, View, KeyboardAvoidingView, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
-
 import { Colors } from "../../constants/Colors";
 import AuthView from "../../components/containers/AuthView";
 import { CustomCheckbox } from "../../components/input/CheckBox";
@@ -11,6 +10,7 @@ import CustomInput from "../../components/input/Input";
 import Btn from "../../components/button/button";
 import isValidEmail from "../../utils/isValidEmail";
 import isValidName from "../../utils/isValidName";
+import AuthContext from "../../contexts/AuthContext/AuthContext";
 
 export default function Signup() {
     const [fullName, setFullName] = useState("");
@@ -19,6 +19,8 @@ export default function Signup() {
     const [appearPermission, setAppearPermission] = useState(true);
     const [errorMessage, setErrorMessage] = useState("");
     const [erro, setErro] = useState(false)
+
+    const { signup } = useContext(AuthContext);
 
     function handleInputChange(key, value) {
         switch (key) {
@@ -66,22 +68,13 @@ export default function Signup() {
 
             setErrorMessage("");
 
-            const response = await fetch('http://172.17.177.248:8000/api/auth/signup', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(user)
-            });
+            const response = await signup(fullName, email, password, appearPermission);
 
-            if (response.ok) {
+            if (response.success) {
                 router.push("/(guest)/home");
             } else {
-                const errorData = await response.json();
-                setErrorMessage(errorData.message || "Something went wrong. Please try again.");
+                setErrorMessage(response.error || "Something went wrong. Please try again.");
             }
-
-            // router.push("/(guest)/home");
 
         } catch (error) {
             setErrorMessage("An unexpected error occurred. Please try again.");

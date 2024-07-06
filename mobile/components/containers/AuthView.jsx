@@ -23,7 +23,8 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: Colors.green,
         display: 'flex',
-        alignItems: 'center'
+        alignItems: 'center',
+        height: '100%'
     },
     content: {
         flex: 1,
