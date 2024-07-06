@@ -7,7 +7,6 @@ import { Colors } from "../../constants/Colors";
 import AuthView from "../../components/containers/AuthView";
 import { CustomCheckbox } from "../../components/input/CheckBox";
 import CustomInput from "../../components/input/Input";
-import Btn from "../../components/button/button";
 import isValidEmail from "../../utils/isValidEmail";
 import isValidName from "../../utils/isValidName";
 import AuthContext from "../../contexts/AuthContext/AuthContext";
@@ -108,48 +107,41 @@ export default function Signup() {
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: Colors.green }}>
             <StatusBar barStyle="dark-content" />
-            <KeyboardAvoidingView
-                behavior={Platform.OS === "ios" ? "padding" : "height"}
-                style={{ flex: 1 }}
-            >
-                <AuthView>
-                    <Text style={styles.title}>Sign Up</Text>
-                    <View style={styles.container}>
-                        {data && <FlatList
-                            data={data}
-                            keyExtractor={item => item.id}
-                            renderItem={({ item }) => (
-                                <CustomInput
-                                    style2={true}
-                                    placeholder={item.placeholder}
-                                    label={item.label}
-                                    value={user[item.key]}
-                                    onChangeText={value => handleInputChange(item.key, value)}
-                                    keyboardType={item.keyboardType || "default"}
-                                    error={erro}
-                                    password={item?.password}
-                                />
-                            )}
-                            style={styles.form}
-                            scrollEnabled={false}
-                        />}
-                        <CustomCheckbox
-                            isChecked={appearPermission}
-                            onToggle={() => setAppearPermission(!appearPermission)}
-                            label="I want to appear and view other guests."
-                        />
-                        {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
-                    </View>
-                    <Btn
-                        customStyle={styles.btn}
-                        onPress={handleSubmit}
-                        text="Check in"
-                        disabled={!fullName || !email || !password}
+                <AuthView
+                    mainText="Sign Up"
+                    handleSubmit={handleSubmit}
+                    alternativeText={{
+                        link: "/(auth)/login",
+                        texto: "Already have an account?"
+                    }}
+                >
+                    {data && <FlatList
+                        data={data}
+                        keyExtractor={item => item.id}
+                        renderItem={({ item }) => (
+                            <CustomInput
+                                style2={true}
+                                placeholder={item.placeholder}
+                                label={item.label}
+                                value={user[item.key]}
+                                onChangeText={value => handleInputChange(item.key, value)}
+                                keyboardType={item.keyboardType || "default"}
+                                error={erro}
+                                password={item?.password}
+                            />
+                        )}
+                        style={styles.form}
+                        scrollEnabled={false}
+                    />}
+                    <CustomCheckbox
+                        isChecked={appearPermission}
+                        onToggle={() => setAppearPermission(!appearPermission)}
+                        label="I want to appear and view other guests."
                     />
-                    <Text style={styles.subtitle} onPress={() => router.push("/(auth)/login")}>Already have an account?</Text>
+                    {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
+
                 </AuthView>
-            </KeyboardAvoidingView>
-        </SafeAreaView>
+        </SafeAreaView >
     );
 }
 

@@ -5,7 +5,6 @@ import { StatusBar } from "expo-status-bar";
 import { Colors } from "../../constants/Colors";
 import AuthView from "../../components/containers/AuthView";
 import CustomInput from "../../components/input/Input";
-import Btn from "../../components/button/button";
 import { router } from "expo-router";
 import isValidEmail from "../../utils/isValidEmail";
 import AuthContext from "../../contexts/AuthContext/AuthContext";
@@ -68,13 +67,15 @@ export default function Login() {
 
             setErrorMessage("");
 
-            const response = await login(email, password);
+            // const response = await login(email, password);
 
-            if (response.success) {
-                router.push("/(guest)/home");
-            } else {
-                setErrorMessage(response.error || "Something went wrong. Please try again.");
-            }
+            // if (response.success) {
+            //     router.push("/(guest)/home");
+            // } else {
+            //     setErrorMessage(response.error || "Something went wrong. Please try again.");
+            // }
+
+            router.push("/(guest)/home");
 
         } catch (error) {
             setErrorMessage("An unexpected error occurred. Please try again.");
@@ -86,30 +87,32 @@ export default function Login() {
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: Colors.green }}>
             <StatusBar barStyle="dark-content" />
-            <AuthView>
-                <Text style={styles.title}>Login</Text>
-                <View style={styles.container}>
-                    {data && <FlatList
-                        data={data}
-                        keyExtractor={item => item.id}
-                        renderItem={({ item }) => (
-                            <CustomInput
-                                style2={true}
-                                placeholder={item.placeholder}
-                                label={item.label}
-                                value={user[item.key]}
-                                onChangeText={value => handleInputChange(item.key, value)}
-                                password={item?.password}
-                            />
-                        )}
-                        style={styles.form}
-                        scrollEnabled={false}
-                    />}
-                    <Text style={styles.passwordText}>Forgot your password?</Text>
-                    {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
-                </View>
-                <Btn customStyle={styles.btn} onPress={handleSubmit} text="Check in" />
-                <Text onPress={() => router.push("/(auth)/signup")} style={styles.subtitle}>Not have an account yet?</Text>
+            <AuthView
+                handleSubmit={handleSubmit}
+                mainText="Login"
+                alternativeText={{
+                    link: "/(auth)/signup",
+                    texto: 'Not have an account yet?'
+                }}
+            >
+                {data && <FlatList
+                    data={data}
+                    keyExtractor={item => item.id}
+                    renderItem={({ item }) => (
+                        <CustomInput
+                            style2={true}
+                            placeholder={item.placeholder}
+                            label={item.label}
+                            value={user[item.key]}
+                            onChangeText={value => handleInputChange(item.key, value)}
+                            password={item?.password}
+                        />
+                    )}
+                    style={styles.form}
+                    scrollEnabled={false}
+                />}
+                <Text style={styles.passwordText}>Forgot your password?</Text>
+                {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
             </AuthView>
         </SafeAreaView>
     );
@@ -139,17 +142,8 @@ const styles = StyleSheet.create({
     passwordText: {
         fontWeight: '600',
         marginTop: 15,
-        marginBottom: 10, 
+        marginBottom: 10,
         fontSize: 16
-    },
-    btn: {
-        marginTop: -35,
-        width: '80%'
-    },
-    container2: {
-        flex: 1,
-        position: 'absolute',
-        height: "100%"
     },
     header: {
         alignItems: "center",

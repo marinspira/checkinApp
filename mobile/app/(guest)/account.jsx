@@ -9,6 +9,19 @@ import CustomInput from "../../components/input/Input";
 
 export default function Account() {
 
+    function handleInputChange(key, value) {
+        switch (key) {
+            case 'email':
+                setEmail(value);
+                break;
+            case 'password':
+                setPassword(value);
+                break;
+            default:
+                break;
+        }
+    }
+
     const user = {
         name: "Maria",
         profileImg: profileDefault
@@ -43,45 +56,47 @@ export default function Account() {
         },
     ];
 
+    function handleSubmit() {
+        return null
+    }
+
     return (
-        <ScrollView style={styles.container}>
+        <View style={styles.container}>
             <StatusBar barStyle="dark-content" />
-            <ContainerPaddingHorizontal>
-                <View style={styles.container2}>
-                    <AuthView>
-                        <ImageInput />
-                        <View style={styles.container}>
-                            {data && <FlatList
-                                data={data}
-                                keyExtractor={item => item.id}
-                                renderItem={({ item }) => (
-                                    <CustomInput
-                                        style2={true}
-                                        placeholder={item.placeholder}
-                                        label={item.label}
-                                        value={user[item.key]}
-                                        onChangeText={value => handleInputChange(item.key, value)}
-                                        keyboardType={item.keyboardType || "default"}
-                                        password={item?.password}
-                                    />
-                                )}
-                                style={styles.form}
-                                scrollEnabled={false}
-                            />}
-                        </View>
-                    </AuthView>
-                </View>
-            </ContainerPaddingHorizontal>
-        </ScrollView>
+            <AuthView handleSubmit={handleSubmit}>
+                <ImageInput />
+                {data && <FlatList
+                    data={data}
+                    keyExtractor={item => item.id}
+                    renderItem={({ item }) => (
+                        <CustomInput
+                            style2={true}
+                            placeholder={item.placeholder}
+                            label={item.label}
+                            value={user[item.key]}
+                            onChangeText={value => handleInputChange(item.key, value)}
+                            keyboardType={item.keyboardType || "default"}
+                            password={item?.password}
+                        />
+                    )}
+                    style={styles.form}
+                    scrollEnabled={false}
+                />}
+            </AuthView>
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: Colors.gray
+        backgroundColor: Colors.gray,
+        flex: 1
     },
     container2: {
         gap: 20,
         paddingVertical: 30
     },
+    form: {
+        marginTop: 40
+    }
 })

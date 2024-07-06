@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
 
     const signup = async (fullName, email, password, appearPermission) => {
         try {
-            const response = await axios.post('http://localhost:8000/api/auth/signup', {
+            const response = await axios.post('https://8de6-171-6-245-95.ngrok-free.app/api/auth/signup', {
                 fullName,
                 email,
                 password,
@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (email, password) => {
         try {
-            const response = await axios.post('http://localhost:8000/api/auth/login', {
+            const response = await axios.post('https://8de6-171-6-245-95.ngrok-free.app/api/auth/login', {
                 email,
                 password
             });
@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }) => {
 
     const logout = async () => {
         try {
-            await axios.post('http://localhost:8000/api/auth/logout');
+            await axios.post('https://8de6-171-6-245-95.ngrok-free.app/api/auth/logout');
             setUser(null);
             await AsyncStorage.removeItem('user');
         } catch (error) {
