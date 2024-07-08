@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
-import { Colors } from "../../constants/Colors";
+import { Colors } from "@/constants/Colors";
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const CustomInput = ({ 
@@ -11,7 +11,8 @@ const CustomInput = ({
     onChangeText, 
     errorMessage, 
     password, 
-    validator 
+    validator,
+    disable
 }) => {
     const [value, setValue] = useState('');
     const [error, setError] = useState('');
@@ -47,6 +48,7 @@ const CustomInput = ({
                     onChangeText={handleChange}
                     secureTextEntry={isPasswordVisible}
                     value={value}
+                    editable={disable ? false : true}
                 />
                 {icon && <View style={styles.icon}>{icon}</View>}
                 {password && (
@@ -79,7 +81,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         borderRadius: 8,
         width: '100%',
-        marginBottom: 5
+        marginBottom: 8
     },
     input2: {
         borderBottomWidth: 1,

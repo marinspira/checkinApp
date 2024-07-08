@@ -16,7 +16,7 @@ export default function AuthView({ children, logo, mainText, handleSubmit, alter
                     style={{ flex: 1 }}
                 >
                     <View style={styles.content}>
-                        {logo && <Image style={styles.logo} source={require('../../assets/images/logo.png')} />}
+                        {logo && <Image style={styles.logo} source={require('@/assets/images/logo.png')} />}
                         <Text style={styles.title}>{mainText}</Text>
                         <ImageInput style={styles.img} />
                         <View style={handleSubmit ? styles.form : ''}>

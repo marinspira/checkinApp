@@ -47,7 +47,7 @@ const CustomSelect = ({ label, options, placeholder, onSelect, selectedValue }) 
 const styles = StyleSheet.create({
     container: {
         width: '100%',
-        marginBottom: 10,
+        marginBottom: 20,
     },
     label: {
         fontSize: 15,
