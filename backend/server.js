@@ -3,6 +3,7 @@ import dotenv from "dotenv"
 import authRoutes from "./routes/auth.routes.js"
 import messageRoutes from "./routes/message.routes.js"
 import contactsRoutes from "./routes/contacts.routes.js"
+import checkinRoutes from "./routes/checkin.routes.js"
 import connectToMongoDB from "./db/connectToMongoDB.js"
 import cookieParser from "cookie-parser"
 import cors from 'cors'
@@ -22,6 +23,7 @@ app.use(cookieParser())
 app.use("/api/auth", authRoutes)
 app.use("/api/messages", messageRoutes)
 app.use("/api/contacts", contactsRoutes)
+app.use("/api/checkin", checkinRoutes)
 
 app.listen(PORT, () => {
     connectToMongoDB()

@@ -45,17 +45,15 @@ export default function Home() {
                             marginBottom: 25
                         }}>
                         <ProfilePhoto user={user} />
-                        <Entypo name="notification" size={24} color="white" />
                     </View>
                     <Text style={[FontSizes.title, { color: "#fff" }]}>Hello, {user.name}!</Text>
-                    <Text style={[FontSizes.normalText, { color: "#fff" }]}>Sinta-se conectado com a sua estadia! ☀️</Text>
+                    <Text style={[FontSizes.normalText, { color: "#fff" }]}>Feel connected to your stay! ☀️</Text>
                 </ContainerPaddingHorizontal>
             </View>
             <ContainerPaddingHorizontal>
                 <View style={styles.guests}>
                     <View>
                         <Text style={FontSizes.subtitle}>Staying with you</Text>
-                        {/* <Text style={FontSizes.body}>Clique duas vezes para deixar seu like</Text> */}
                     </View>
                     <GuestsProfileImgSlide />
                 </View>
@@ -64,8 +62,8 @@ export default function Home() {
                 <Text style={FontSizes.subtitle}>Events</Text>
                 <View style={styles.newEventBtn}>
                     <View style={styles.btnEvent}>
-                        <Text style={[FontSizes.body, {color: 'white', marginTop: 3}]}>
-                            Sugerir um evento
+                        <Text style={[FontSizes.body, { color: 'white', marginTop: 3 }]}>
+                            Suggest an event
                         </Text>
                         <AntDesign name="arrowright" size={16} color="white" />
                     </View>

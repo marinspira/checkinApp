@@ -8,20 +8,15 @@ const guestSchema = new Schema({
         ref: 'User',
         required: true
     },
-    name: {
+    fullName: {
         type: String,
         required: true
     },
-    documentType: {
-        type: String,
-        enum: ['ID', 'Passport'],
-        required: true
+    idPhoto: {
+        data: Buffer,
+        contentType: String 
     },
-    documentNumber: {
-        type: String,
-        required: true
-    },
-    documentPhoto: {
+    passaportPhoto: {
         data: Buffer,
         contentType: String 
     },
@@ -31,7 +26,8 @@ const guestSchema = new Schema({
     },
     appearPermission: {
         type: Boolean,
-        default: false
+        default: false,
+        required: true
     },
     isVolunteer: {
         type: Boolean,
@@ -43,4 +39,6 @@ const guestSchema = new Schema({
     }
 });
 
-module.exports = mongoose.model('Guest', guestSchema);
+const Guest = mongoose.model('Guest', guestSchema);
+
+export default Guest

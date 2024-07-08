@@ -4,7 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 import defaultImg from '@/assets/images/unnamed.png';
 import { FontAwesome5 } from '@expo/vector-icons';
 
-const ImageInput = ({ onImageChange, style, label }) => {
+const ImageInput = ({ onProfileChange, style, label }) => {
   const [imageInfo, setImageInfo] = useState({ uri: null, name: null });
 
   const handleChoosePhoto = async () => {
@@ -24,7 +24,7 @@ const ImageInput = ({ onImageChange, style, label }) => {
     if (!result.canceled) {
       const imageName = result.assets[0].fileName || result.assets[0].uri.split('/').pop();
       setImageInfo({ uri: result.assets[0].uri, name: imageName });
-      onImageChange(result);
+      onProfileChange(result);
     }
   };
 
@@ -45,7 +45,7 @@ const ImageInput = ({ onImageChange, style, label }) => {
     if (!result.canceled) {
       const imageName = result.assets[0].fileName || result.assets[0].uri.split('/').pop();
       setImageInfo({ uri: result.assets[0].uri, name: imageName });
-      onImageChange(result);
+      onProfileChange(result);
     }
   };
 

@@ -1,23 +1,29 @@
+import { useContext, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { FlatList, ScrollView, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 import { Colors } from "@/constants/Colors";
-import profileDefault from '@/assets/images/unnamed.png'
 import AuthView from "@/components/containers/AuthView";
 import CustomInput from "@/components/input/Input";
-import { useState } from "react";
 import ToogleButton from "@/components/input/ToogleButton";
 import CustomSelect from "@/components/input/Select";
 import ImageInput from "@/components/input/ImageInput";
-
+import { checkinService } from "./service";
+import { AuthContext } from '@/contexts/AuthContext/AuthContext.js'
 export default function Checkin() {
-    const [fullName, setFullName] = useState("");
+
+    const { user } = useContext(AuthContext)
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [appearPermission, setAppearPermission] = useState(true);
-    const [errorMessage, setErrorMessage] = useState("");
-    const [erro, setErro] = useState(false)
-    const [selectedOption, setSelectedOption] = useState('');
+
+    const [fullName, setFullName] = useState("");
     const [selectedCountry, setSelectedCountry] = useState('');
+    const [appearPermission, setAppearPermission] = useState(true);
+    const [profileImage, setProfileImage] = useState(null);
+    const [idImg, setIdImg] = useState(null)
+    const [passaportImg, setPassaportImg] = useState(null)
+    const [phoneNumber, setPhoneNumber] = useState('')
+
     const [hostelCountry, SetHostelCountry] = useState('');
 
     const countries = [
@@ -43,22 +49,30 @@ export default function Checkin() {
             case 'password':
                 setPassword(value);
                 break;
+            case 'fullName':
+                setFullName(value)
+            case 'phoneNumber':
+                setPhoneNumber(value)
             default:
                 break;
         }
     }
 
-    const user = {
-        fullName: fullName,
-        email: email,
-        password: password
-    }
-
-    const profile = {
-        profileImg: profileDefault,
-        // document: documentImg || documentPDF
-
-    }
+    const handleImageChange = (key, result) => {
+        switch (key) {
+            case 'profileImage':
+                setProfileImage(result);
+                break;
+            case 'idImg':
+                setIdImg(result);
+                break;
+            case 'passaportImg':
+                setPassaportImg(result);
+                break;
+            default:
+                break;
+        }
+    };
 
     const data = [
         {
@@ -85,18 +99,38 @@ export default function Checkin() {
             id: '4',
             placeholder: '+55 21 0 0000-0000',
             label: "Your phone number",
-            key: "phone",
+            key: "phoneNumber",
         },
     ];
 
+    // const user = {
+    //     email: email,
+    //     password: password
+    // };
+
+    const guestDetails = {
+        fullName: fullName,
+        phoneNumber: phoneNumber,
+        idPhoto: idImg,
+        passaportPhoto: passaportImg,
+        profilePicture: profileImage,
+        appearPermission: appearPermission,
+        country: selectedCountry,
+        userId: user._id
+    };
+
     function handleSubmit() {
-        return null
+        console.log(user)
+        checkinService(guestDetails);
     }
 
     return (
         <View style={styles.container}>
             <StatusBar barStyle="dark-content" />
-            <AuthView handleSubmit={handleSubmit}>
+            <AuthView
+                onProfileChange={(result) => handleImageChange('profileImage', result)}
+                handleSubmit={handleSubmit}
+            >
                 {data && <FlatList
                     data={data}
                     keyExtractor={item => item.id}
@@ -122,9 +156,12 @@ export default function Checkin() {
                     selectedValue={selectedCountry}
                 />
                 {selectedCountry === hostelCountry &&
-                    <ImageInput label="Your ID image" />
+                    <ImageInput
+                        onProfileChange={(result) => handleImageChange('idImg', result)}
+                        label="Your ID image"
+                    />
                 }
-                <ImageInput label="Your passaport image" />
+                <ImageInput onProfileChange={(result) => handleImageChange('passaportImg', result)} label="Your passaport image" />
                 <ToogleButton
                     selected={appearPermission}
                     label="I want to apper and view other guests."
@@ -143,8 +180,4 @@ const styles = StyleSheet.create({
     form: {
         marginTop: 10,
     },
-    container2: {
-        gap: 20,
-        paddingVertical: 30
-    }
 })

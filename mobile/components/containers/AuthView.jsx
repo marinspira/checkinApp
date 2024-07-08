@@ -6,11 +6,11 @@ import ImageInput from "@/components/input/ImageInput";
 import { router } from "expo-router";
 import { Ionicons } from '@expo/vector-icons';
 
-export default function AuthView({ children, logo, mainText, handleSubmit, alternativeText }) {
+export default function AuthView({ children, logo, mainText, handleSubmit, alternativeText, onProfileChange }) {
     return (
         <SafeAreaView style={styles.container}>
             <View style={{ maxHeight: '75%' }}>
-            <Ionicons name="close-circle-outline" style={styles.closeButton} size={35} color="black" />
+                {onProfileChange && <Ionicons name="close-circle-outline" style={styles.closeButton} size={35} color="black" />}
                 <KeyboardAvoidingView
                     behavior={Platform.OS === "ios" ? "padding" : "height"}
                     style={{ flex: 1 }}
@@ -18,7 +18,7 @@ export default function AuthView({ children, logo, mainText, handleSubmit, alter
                     <View style={styles.content}>
                         {logo && <Image style={styles.logo} source={require('@/assets/images/logo.png')} />}
                         <Text style={styles.title}>{mainText}</Text>
-                        <ImageInput style={styles.img} />
+                        {onProfileChange && <ImageInput onProfileChange={onProfileChange} style={styles.img} />}
                         <View style={handleSubmit ? styles.form : ''}>
                             <ScrollView>
                                 {children}
