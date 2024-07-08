@@ -1,45 +1,51 @@
 import { StyleSheet, Text, View, SafeAreaView, Image, StatusBar } from 'react-native';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { AntDesign, MaterialIcons, Octicons } from '@expo/vector-icons';
-import { Link } from 'expo-router';
+import { Link, Redirect } from 'expo-router';
 import AuthView from '../components/containers/AuthView.jsx';
+import { AuthContext } from '@/contexts/AuthContext/AuthContext.js'
 
 export default function index() {
 
+    const { user } = useContext(AuthContext)
     const [view, setView] = useState('');
 
-    return (
-        <AuthView logo={true}>
-            <StatusBar barStyle="dark-content" />
-            <Link href="/(auth)/signup">
-                <View style={[styles.btn]}>
-                    <View>
-                        <Text style={styles.btnText}>Sou Hóspede</Text>
-                        <Text style={styles.btnTextBold}>Check in</Text>
+    if (user) {
+        return <Redirect href='/(guest)/home' />
+    } else {
+        return (
+            <AuthView logo={true}>
+                <StatusBar barStyle="dark-content" />
+                <Link href="/(auth)/signup">
+                    <View style={[styles.btn]}>
+                        <View>
+                            <Text style={styles.btnText}>Sou Hóspede</Text>
+                            <Text style={styles.btnTextBold}>Check in</Text>
+                        </View>
+                        <MaterialIcons name="airplane-ticket" size={30} color="black" />
                     </View>
-                    <MaterialIcons name="airplane-ticket" size={30} color="black" />
-                </View>
-            </Link>
-            <Link href="/(auth)/staff">
-                <View style={[styles.btn]}>
-                    <View>
-                        <Text style={styles.btnText}>Sou voluntário</Text>
-                        <Text style={styles.btnTextBold}>Voluntariados</Text>
+                </Link>
+                <Link href="/(publicScreens)/volunteers">
+                    <View style={[styles.btn]}>
+                        <View>
+                            <Text style={styles.btnText}>Sou voluntário</Text>
+                            <Text style={styles.btnTextBold}>Voluntariados</Text>
+                        </View>
+                        <Octicons name="workflow" size={24} color="black" />
                     </View>
-                    <Octicons name="workflow" size={24} color="black" />
-                </View>
-            </Link>
-            <Link href="/(auth)/owner">
-                <View onPress={() => setView('owner')} style={[styles.btn]}>
-                    <View>
-                        <Text style={styles.btnText}>Sou Host</Text>
-                        <Text style={styles.btnTextBold}>Gerenciar</Text>
+                </Link>
+                <Link href="/(auth)/owner">
+                    <View onPress={() => setView('owner')} style={[styles.btn]}>
+                        <View>
+                            <Text style={styles.btnText}>Sou Host</Text>
+                            <Text style={styles.btnTextBold}>Gerenciar</Text>
+                        </View>
+                        <AntDesign name="arrowright" size={24} color="black" />
                     </View>
-                    <AntDesign name="arrowright" size={24} color="black" />
-                </View>
-            </Link>
-        </AuthView>
-    )
+                </Link>
+            </AuthView>
+        )
+    }
 }
 
 const styles = StyleSheet.create({

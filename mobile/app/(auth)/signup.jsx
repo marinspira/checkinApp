@@ -3,13 +3,13 @@ import { FlatList, StyleSheet, Text, View, KeyboardAvoidingView, Platform } from
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
-import { Colors } from "../../constants/Colors";
-import AuthView from "../../components/containers/AuthView";
-import { CustomCheckbox } from "../../components/input/CheckBox";
-import CustomInput from "../../components/input/Input";
-import isValidEmail from "../../utils/isValidEmail";
-import isValidName from "../../utils/isValidName";
-import AuthContext from "../../contexts/AuthContext/AuthContext";
+import { Colors } from "@/constants/Colors";
+import AuthView from "@/components/containers/AuthView";
+import ToogleButton from "@/components/input/ToogleButton";
+import CustomInput from "@/components/input/Input";
+import isValidEmail from "@/utils/isValidEmail";
+import isValidName from "@/utils/isValidName";
+import AuthContext from "@/contexts/AuthContext/AuthContext";
 
 export default function Signup() {
     const [fullName, setFullName] = useState("");
@@ -133,9 +133,9 @@ export default function Signup() {
                         style={styles.form}
                         scrollEnabled={false}
                     />}
-                    <CustomCheckbox
-                        isChecked={appearPermission}
-                        onToggle={() => setAppearPermission(!appearPermission)}
+                    <ToogleButton
+                        selected={appearPermission}
+                        onPress={() => setAppearPermission(!appearPermission)}
                         label="I want to appear and view other guests."
                     />
                     {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}

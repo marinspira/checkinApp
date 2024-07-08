@@ -7,7 +7,7 @@ import WidgetJoinList from "@/components/joinWidgetList";
 import defaultImg from '@/assets/images/ilus.jpg';
 import profileDefault from '@/assets/images/unnamed.png'
 
-export default function Staff() {
+export default function Volunteer() {
 
     const positions = [
         {

@@ -20,7 +20,7 @@ export default function TabsLayout() {
                             iconName = 'home';
                         } else if (route.name === 'account') {
                             iconName = focused ? 'user' : 'user-o';
-                        } else if (route.name === 'staff') {
+                        } else if (route.name === 'volunteer') {
                             iconName = 'list-outline';
                         } else if (route.name === 'notifications') {
                             iconName = 'bells';
@@ -30,7 +30,7 @@ export default function TabsLayout() {
 
                         let IconComponent = FontAwesome;
 
-                        if (route.name === 'staff') {
+                        if (route.name === 'volunteer') {
                             IconComponent = Ionicons;
                         }
 
@@ -69,10 +69,10 @@ export default function TabsLayout() {
                     }}
                 />
                 <Tabs.Screen
-                    name="staff"
+                    name="volunteer"
                     options={{
                         href: {
-                            pathname: "./(screens)/staff",
+                            pathname: "/(guest)/volunteer",
                         },
                         headerShown: true,
                         headerStyle: {

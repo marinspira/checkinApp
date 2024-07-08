@@ -1,37 +1,60 @@
 import React, { useState } from 'react';
-import { View, Image, StyleSheet, Pressable } from 'react-native';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
-import defaultImg from '../../assets/images/unnamed.png';
+import { View, Image, StyleSheet, Pressable, Button } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import defaultImg from '@/assets/images/unnamed.png';
 
-const ImageInput = ({ onImageChange }) => {
+const ImageInput = ({ onImageChange, style }) => {
   const [imageUri, setImageUri] = useState(null);
 
-  const handleChoosePhoto = () => {
-    launchImageLibrary({ mediaType: 'photo' }, (response) => {
-      if (response.assets && response.assets.length > 0) {
-        const uri = response.assets[0].uri;
-        setImageUri(uri);
-        onImageChange(response.assets[0]);
-      }
+  const handleChoosePhoto = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      alert('Desculpe, precisamos de permissões de acesso à câmera para funcionar!');
+      return;
+    }
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
     });
+
+    if (!result.cancelled) {
+      setImageUri(result.uri);
+      onImageChange(result);
+    }
   };
 
-  const handleTakePhoto = () => {
-    launchCamera({ mediaType: 'photo' }, (response) => {
-      if (response.assets && response.assets.length > 0) {
-        const uri = response.assets[0].uri;
-        setImageUri(uri);
-        onImageChange(response.assets[0]);
-      }
+  const handleTakePhoto = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== 'granted') {
+      alert('Desculpe, precisamos de permissões de acesso à câmera para funcionar!');
+      return;
+    }
+
+    let result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
     });
+
+    if (!result.canceled) {
+      setImageUri(result.uri);
+      onImageChange(result);
+    }
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       <Pressable style={styles.btn} onPress={handleChoosePhoto}>
         <Image source={imageUri ? { uri: imageUri } : defaultImg} style={styles.image} />
       </Pressable>
-      {/* <Button title="Tirar Foto" onPress={handleTakePhoto} /> */}
+      {/* 
+      <Button title="Tirar Foto" onPress={handleTakePhoto} />
+      Uncomment above if you want to enable camera capture
+      */}
     </View>
   );
 };
@@ -44,15 +67,17 @@ const styles = StyleSheet.create({
   image: {
     width: 100,
     height: 100,
-    padding: 20,
-    borderRadius: 100,
-    zIndex: 2,
+    borderRadius: 100 / 2,
+    borderColor: "#fff",
+    borderWidth: 5
   },
   btn: {
     width: 100,
     height: 100,
-    borderRadius: 100,
+    borderRadius: 100 / 2,
     backgroundColor: 'red',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

@@ -1,57 +1,108 @@
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import React, { useState } from "react";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 import { Colors } from "../../constants/Colors";
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-export default function CustomInput({ label, placeholder, style2, icon, onChangeText, error, password }) {
+const CustomInput = ({ 
+    label, 
+    placeholder, 
+    style2, 
+    icon, 
+    onChangeText, 
+    errorMessage, 
+    password, 
+    validator 
+}) => {
+    const [value, setValue] = useState('');
+    const [error, setError] = useState('');
+    const [isPasswordVisible, setIsPasswordVisible] = useState(password);
+
+    const handleChange = (text) => {
+        setValue(text);
+        if (validator) {
+            const validationError = validator(text);
+            setError(validationError);
+        }
+        if (onChangeText) {
+            onChangeText(text);
+        }
+    };
+
+    const togglePasswordVisibility = () => {
+        setIsPasswordVisible(!isPasswordVisible);
+    };
+
     return (
-        <View>
+        <View style={styles.container}>
             {label && <Text style={styles.label}>{label}</Text>}
-            {icon && (
-                <View style={styles.icon}>
-                    {icon}
-                </View>
-            )}
-            <TextInput
-                style={[
-                    (style2 ? styles.input2 : styles.input),
-                    (error && { borderColor: 'red', borderWidth: 2 })
-                ]}
-                placeholder={placeholder}
-                placeholderTextColor="#888"
-                onChangeText={onChangeText}
-                secureTextEntry={password}
-            >
-            </TextInput>
+            <View style={styles.inputContainer}>
+                <TextInput
+                    style={[
+                        styles.input,
+                        style2 ? styles.input2 : {},
+                        (error || errorMessage) && { borderColor: 'red', borderWidth: 2 }
+                    ]}
+                    placeholder={placeholder}
+                    placeholderTextColor="#888"
+                    onChangeText={handleChange}
+                    secureTextEntry={isPasswordVisible}
+                    value={value}
+                />
+                {icon && <View style={styles.icon}>{icon}</View>}
+                {password && (
+                    <TouchableOpacity onPress={togglePasswordVisibility} style={styles.eyeIcon}>
+                        <Icon name={isPasswordVisible ? "eye-slash" : "eye"} size={18} color="#888" />
+                    </TouchableOpacity>
+                )}
+            </View>
+            {(error || errorMessage) && <Text style={styles.errorText}>{error || errorMessage}</Text>}
         </View>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
-    input: {
-        backgroundColor: "#fff",
-        padding: 15,
-        marginTop: 5,
+    container: {
+        width: '100%',
         marginBottom: 10,
-        fontSize: 18,
-        borderRadius: 5,
-        minWidth: 300,
     },
     label: {
         fontSize: 15,
-        fontWeight: "700"
+        fontWeight: "700",
+        marginBottom: 5,
+    },
+    inputContainer: {
+        position: 'relative',
+    },
+    input: {
+        backgroundColor: Colors.gray,
+        padding: 15,
+        fontSize: 16,
+        borderRadius: 8,
+        width: '100%',
+        marginBottom: 5
     },
     input2: {
         borderBottomWidth: 1,
         borderColor: "#c9c9c9",
         paddingTop: 12,
         paddingBottom: 8,
-        marginTop: 5,
         marginBottom: 20,
-        fontSize: 16,
     },
     icon: {
         position: 'absolute',
-        zIndex: 2,
         top: 18,
-        right: 15
-    }
-})
+        right: 45,
+    },
+    eyeIcon: {
+        position: 'absolute',
+        top: 15,
+        right: 15,
+    },
+    errorText: {
+        color: 'red',
+        fontSize: 14,
+        marginTop: 5,
+    },
+});
+
+export default CustomInput;

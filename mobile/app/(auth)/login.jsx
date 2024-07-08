@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { FlatList, StyleSheet, Text, View, Alert } from "react-native";
+import { FlatList, StyleSheet, Text, View, Alert, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { Colors } from "../../constants/Colors";

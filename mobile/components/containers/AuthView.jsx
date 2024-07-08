@@ -1,17 +1,16 @@
 import { Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
-import { Colors } from "../../constants/Colors";
+import { Colors } from "@/constants/Colors";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Btn from "../button/button";
+import Btn from "@/components/button/button";
+import ImageInput from "@/components/input/ImageInput";
 import { router } from "expo-router";
+import { Ionicons } from '@expo/vector-icons';
 
 export default function AuthView({ children, logo, mainText, handleSubmit, alternativeText }) {
     return (
         <SafeAreaView style={styles.container}>
-            <ScrollView
-                contentContainerStyle={{
-                    height: "100%"
-                }}
-            >
+            <View style={{ maxHeight: '75%' }}>
+            <Ionicons name="close-circle-outline" style={styles.closeButton} size={35} color="black" />
                 <KeyboardAvoidingView
                     behavior={Platform.OS === "ios" ? "padding" : "height"}
                     style={{ flex: 1 }}
@@ -19,14 +18,17 @@ export default function AuthView({ children, logo, mainText, handleSubmit, alter
                     <View style={styles.content}>
                         {logo && <Image style={styles.logo} source={require('../../assets/images/logo.png')} />}
                         <Text style={styles.title}>{mainText}</Text>
+                        <ImageInput style={styles.img} />
                         <View style={handleSubmit ? styles.form : ''}>
-                            {children}
+                            <ScrollView>
+                                {children}
+                            </ScrollView>
                         </View>
                         {handleSubmit && <Btn customStyle={styles.btn} onPress={handleSubmit} text="Check in" />}
                         {alternativeText && <Text onPress={() => router.push(alternativeText.link)} style={styles.subtitle}>{alternativeText.texto}</Text>}
                     </View>
                 </KeyboardAvoidingView>
-            </ScrollView>
+            </View>
         </SafeAreaView>
     )
 }
@@ -42,16 +44,19 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.green,
         display: 'flex',
         alignItems: 'center',
-        height: '100%'
+        height: '100%',
+        justifyContent: 'center'
     },
     form: {
         backgroundColor: "#fff",
-        padding: 30,
+        paddingHorizontal: 20,
         justifyContent: "center",
         borderRadius: 10,
-        width: 320,
-        marginTop: 20,
+        width: 340,
         paddingBottom: 45,
+        paddingTop: 50,
+        height: '100%',
+        position: 'relative'
     },
     content: {
         flex: 1,
@@ -60,7 +65,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.green,
         gap: 10,
         maxWidth: 400,
-        height: '100%',
+        // height: '100%',
     },
     logo: {
         width: 120,
@@ -75,5 +80,15 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         fontSize: 18,
         marginTop: 25
+    },
+    img: {
+        marginBottom: -55,
+        zIndex: 2
+    },
+    closeButton: {
+        position: 'absolute',
+        right: -8,
+        top: 25,
+        zIndex: 3
     }
 })
