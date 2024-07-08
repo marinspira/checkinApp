@@ -9,7 +9,7 @@ export const signup = async (req, res) => {
             email,
             password,
             // confirmPassword,
-            appearPermission
+            userType
         } = req.body;
 
         console.log(req.body)
@@ -33,7 +33,7 @@ export const signup = async (req, res) => {
             email,
             password: hashedPassword,
             // confirmPassword,
-            appearPermission,
+            userType,
         });
 
         if (newUser) {
@@ -77,7 +77,6 @@ export const login = async (req, res) => {
             _id: user._id,
             fullName: user.fullName,
             email: user.email,
-            profilePic: user.profilePic
         });
 
     } catch (error) {

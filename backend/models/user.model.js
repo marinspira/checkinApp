@@ -14,10 +14,11 @@ const userSchema = new mongoose.Schema({
         required: true,
         minlength: 6
     },
-    appearPermission: {
-        type: Boolean,
-        required: true
-    }
+    userType: { 
+        type: String, 
+        enum: ['Owner', 'Guest'], 
+        required: true 
+    },
 }, {timestamps: true})
 
 const User = mongoose.model("User", userSchema)
