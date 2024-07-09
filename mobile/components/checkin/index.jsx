@@ -9,6 +9,8 @@ import CustomSelect from "@/components/input/Select";
 import ImageInput from "@/components/input/ImageInput";
 import { checkinService } from "./service";
 import { AuthContext } from '@/contexts/AuthContext/AuthContext.js'
+import isValidEmail from "../../utils/isValidEmail";
+import isValidName from "../../utils/isValidName";
 export default function Checkin() {
 
     const { user } = useContext(AuthContext)
@@ -23,6 +25,8 @@ export default function Checkin() {
     const [idImg, setIdImg] = useState(null)
     const [passaportImg, setPassaportImg] = useState(null)
     const [phoneNumber, setPhoneNumber] = useState('')
+
+    const [showErrors, setShowErrors] = useState(false);
 
     const [hostelCountry, SetHostelCountry] = useState('');
 
@@ -79,14 +83,18 @@ export default function Checkin() {
             id: '1',
             placeholder: "João da Silva Ferreira",
             label: "Your name",
-            key: "fullName"
+            key: "fullName",
+            validator: isValidName,
+            errorMessage: 'Name invalid'
         },
         {
             id: '2',
             placeholder: "Email@hostelApp.com",
             label: "Your email",
             key: "email",
-            keyboardType: "email-address"
+            keyboardType: "email-address",
+            validator: isValidEmail,
+            errorMessage: 'Email invalid'
         },
         {
             id: '3',
@@ -121,6 +129,7 @@ export default function Checkin() {
 
     function handleSubmit() {
         console.log(user)
+        setShowErrors(true)
         checkinService(guestDetails);
     }
 
@@ -143,6 +152,9 @@ export default function Checkin() {
                             onChangeText={value => handleInputChange(item.key, value)}
                             keyboardType={item.keyboardType || "default"}
                             password={item?.password}
+                            validator={item?.validator}
+                            errorMessage={item?.errorMessage}
+                            showErrors={showErrors}
                         />
                     )}
                     style={styles.form}
