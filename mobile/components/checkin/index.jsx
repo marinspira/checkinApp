@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { FlatList, StyleSheet, View } from "react-native";
 import { Colors } from "@/constants/Colors";
@@ -8,75 +8,37 @@ import ToogleButton from "@/components/input/ToogleButton";
 import CustomSelect from "@/components/input/Select";
 import ImageInput from "@/components/input/ImageInput";
 import { checkinService } from "./service";
-import { AuthContext } from '@/contexts/AuthContext/AuthContext.js'
+import { AuthContext } from '@/contexts/AuthContext/AuthContext.js';
 import isValidEmail from "@/utils/isValidEmail";
 import isValidName from "@/utils/isValidName";
-import isValidPassword from "@/utils/isValidPassoword";
+import { countries } from "@/utils/countries";
+import isValidPhone from "@/utils/isValidPhone";
+import isValidPassword from '@/utils/isValidPassword.js';
 
 export default function Checkin() {
+    const { user } = useContext(AuthContext);
 
-    const { user } = useContext(AuthContext)
+    const [formData, setFormData] = useState({
+        email: "",
+        password: "",
+        fullName: "",
+        phoneNumber: "",
+        selectedCountry: "",
+        appearPermission: true,
+        profileImage: null,
+        idImg: null,
+        passaportImg: null
+    });
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-
-    const [fullName, setFullName] = useState("");
-    const [selectedCountry, setSelectedCountry] = useState('');
-    const [appearPermission, setAppearPermission] = useState(true);
-    const [profileImage, setProfileImage] = useState(null);
-    const [idImg, setIdImg] = useState(null)
-    const [passaportImg, setPassaportImg] = useState(null)
-    const [phoneNumber, setPhoneNumber] = useState('')
-    const [showError, setShowError] = useState(false)
-
+    const [required, setRequired] = useState(false);
     const [hostelCountry, SetHostelCountry] = useState('');
 
-    const countries = [
-        { label: 'Select your country', value: '' },
-        { label: 'United States', value: 'US' },
-        { label: 'Canada', value: 'CA' },
-        { label: 'Brazil', value: 'BR' },
-        { label: 'United Kingdom', value: 'GB' },
-        { label: 'France', value: 'FR' },
-        { label: 'Germany', value: 'DE' },
-        // Add more countries as needed
-    ];
-
-    const handleSelect = (value) => {
-        setSelectedCountry(value);
+    const handleInputChange = (key, value) => {
+        setFormData(prev => ({ ...prev, [key]: value }));
     };
 
-    function handleInputChange(key, value) {
-        switch (key) {
-            case 'email':
-                setEmail(value);
-                break;
-            case 'password':
-                setPassword(value);
-                break;
-            case 'fullName':
-                setFullName(value)
-            case 'phoneNumber':
-                setPhoneNumber(value)
-            default:
-                break;
-        }
-    }
-
     const handleImageChange = (key, result) => {
-        switch (key) {
-            case 'profileImage':
-                setProfileImage(result);
-                break;
-            case 'idImg':
-                setIdImg(result);
-                break;
-            case 'passaportImg':
-                setPassaportImg(result);
-                break;
-            default:
-                break;
-        }
+        setFormData(prev => ({ ...prev, [key]: result }));
     };
 
     const inputText = [
@@ -86,7 +48,8 @@ export default function Checkin() {
             label: "Your name",
             key: "fullName",
             validator: isValidName,
-            errorMessage: 'Please type your full name'
+            errorMessage: 'Please type your full name',
+            required: required
         },
         {
             id: '2',
@@ -95,7 +58,8 @@ export default function Checkin() {
             key: "email",
             keyboardType: "email-address",
             validator: isValidEmail,
-            errorMessage: 'Please enter a valid email address'
+            errorMessage: 'Please enter a valid email address',
+            required: required
         },
         {
             id: '3',
@@ -104,48 +68,52 @@ export default function Checkin() {
             key: "password",
             password: true,
             validator: isValidPassword,
-            errorMessage: 'The password must be at least 8 characters long, including upper and lower case letters, numbers and special characters.'
+            errorMessage: 'The password must be at least 8 characters long, including upper and lower case letters, numbers and special characters.',
+            required: required
         },
         {
             id: '4',
             placeholder: '+55 21 0 0000-0000',
             label: "Your phone number",
             key: "phoneNumber",
-
+            phone: true,
+            validator: isValidPhone,
+            errorMessage: 'Please type a valid phone number.',
+            required: required
         },
     ];
 
-    // const user = {
-    //     email: email,
-    //     password: password
-    // };
-
     const guestDetails = {
-        fullName: fullName,
-        phoneNumber: phoneNumber,
-        idPhoto: idImg,
-        passaportPhoto: passaportImg,
-        profilePicture: profileImage,
-        appearPermission: appearPermission,
-        country: selectedCountry,
+        ...formData,
         userId: user._id
     };
 
-    function handleSubmit() {
-        setShowError(true)
-        const isValid = inputText.every(
-            item =>
-                !item.validator ||
-                !item.validator(guestDetails[item.key])
-        );
+    const handleSubmit = () => {
 
-        if (isValid) {
+        const isAnyFieldEmpty = inputText.some(item => item.required && item.isEmpty);
+
+        let allValid = true;
+
+        inputText.forEach(item => {
+            const value = formData[item.key];
+            const isValid = item.validator ? item.validator(value) : true;
+            console.log(`Field: ${item.label}, Value: ${value}, Valid: ${isValid}`);
+
+            if (!isValid) {
+                allValid = false;
+                console.log(`Field: ${item.label}, Value: ${value}, Valid: ${isValid}`);
+            }
+        });
+
+        if (!isAnyFieldEmpty && allValid) {
+            setRequired(false)
             checkinService(guestDetails);
+
         } else {
+            setRequired(true)
             console.log("Please correct the errors in the form.");
         }
-    }
-
+    };
 
     return (
         <View style={styles.container}>
@@ -153,53 +121,54 @@ export default function Checkin() {
             <AuthView
                 onProfileChange={(result) => handleImageChange('profileImage', result)}
                 handleSubmit={handleSubmit}
+                errorMessage={(required === true) && 'Please correct the errors in the form.'}
             >
-                {inputText && <FlatList
+                <FlatList
                     data={inputText}
                     keyExtractor={item => item.id}
                     renderItem={({ item }) => (
                         <CustomInput
                             placeholder={item.placeholder}
                             label={item.label}
-                            value={user[item.key]}
+                            value={formData[item.key]}
                             onChangeText={value => handleInputChange(item.key, value)}
                             keyboardType={item.keyboardType || "default"}
-                            password={item?.password}
-                            validator={item?.validator}
-                            errorMessage={item?.errorMessage}
+                            password={item.password}
+                            validator={item.validator}
+                            errorMessage={item.errorMessage}
+                            phone={item.phone}
+                            required={item.required}
                         />
                     )}
                     style={styles.form}
                     scrollEnabled={false}
-                />}
+                />
                 <CustomSelect
-                    label="Country"
+                    label="Where are you from?"
                     options={countries}
                     placeholder="Select your country"
-                    onSelect={handleSelect}
-                    selectedValue={selectedCountry}
-                    required={showError}
+                    onSelect={(value) => handleInputChange('selectedCountry', value)}
+                    selectedValue={formData.selectedCountry}
+                    required={required}
                 />
-                {selectedCountry === hostelCountry &&
+                {formData.selectedCountry === hostelCountry &&
                     <ImageInput
                         onProfileChange={(result) => handleImageChange('idImg', result)}
                         label="Your ID image"
-                        // required={showError}
                     />
                 }
                 <ImageInput
                     onProfileChange={(result) => handleImageChange('passaportImg', result)}
-                    label="Your passaport image"
-                    // required={showError}
+                    label="Your passport image"
                 />
                 <ToogleButton
-                    selected={appearPermission}
-                    label="I want to apper and view other guests."
-                    onPress={() => setAppearPermission(!appearPermission)}
+                    selected={formData.appearPermission}
+                    label="I want to appear and view other guests."
+                    onPress={() => handleInputChange('appearPermission', !formData.appearPermission)}
                 />
             </AuthView>
         </View>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
@@ -210,4 +179,4 @@ const styles = StyleSheet.create({
     form: {
         marginTop: 10,
     },
-})
+});

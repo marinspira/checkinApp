@@ -6,7 +6,15 @@ import ImageInput from "@/components/input/ImageInput";
 import { router } from "expo-router";
 import { Ionicons } from '@expo/vector-icons';
 
-export default function AuthView({ children, logo, mainText, handleSubmit, alternativeText, onProfileChange }) {
+export default function AuthView({
+    children,
+    errorMessage,
+    logo,
+    mainText,
+    handleSubmit,
+    alternativeText,
+    onProfileChange
+}) {
     return (
         <SafeAreaView style={styles.container}>
             <View style={{ maxHeight: '75%' }}>
@@ -23,6 +31,16 @@ export default function AuthView({ children, logo, mainText, handleSubmit, alter
                             <ScrollView>
                                 {children}
                             </ScrollView>
+                            {errorMessage &&
+                                <Text style={{
+                                    color: 'red',
+                                    textAlign: 'center',
+                                    marginTop: 10,
+                                    marginBottom: -5
+                                }}
+                                >
+                                    {errorMessage}
+                                </Text>}
                         </View>
                         {handleSubmit && <Btn customStyle={styles.btn} onPress={handleSubmit} text="Check in" />}
                         {alternativeText && <Text onPress={() => router.push(alternativeText.link)} style={styles.subtitle}>{alternativeText.texto}</Text>}
@@ -65,7 +83,6 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.green,
         gap: 10,
         maxWidth: 400,
-        // height: '100%',
     },
     logo: {
         width: 120,

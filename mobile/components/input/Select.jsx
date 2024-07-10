@@ -32,7 +32,7 @@ const CustomSelect = ({
                 <Text style={[styles.selectedValue, !selectedValue && styles.placeholder]}>
                     {selectedValue || placeholder}
                 </Text>
-                <Icon name="chevron-down" size={16} color="#888" />
+                <Icon name="chevron-down" size={12} color="#888" />
             </TouchableOpacity>
             {(required && (selectedValue === '')) && <Text style={styles.errorText}>This field is required</Text>}
             <Modal
