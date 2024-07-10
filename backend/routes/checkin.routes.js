@@ -1,8 +1,9 @@
 import express from "express"
-import { saveGuestDetails } from "../controllers/checkin.controllers.js"
+import { getGuestDetails, saveGuestDetails } from "../controllers/checkin.controllers.js"
 
 const router = express.Router()
 
-router.put("/guest", saveGuestDetails )
+router.put("/guest", saveGuestDetails)
+router.get('/guest/:userId', getGuestDetails);
 
 export default router

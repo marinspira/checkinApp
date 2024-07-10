@@ -17,10 +17,11 @@ const CustomInput = ({
     validator,
     disable,
     phone,
+    defaultValue,
     maxLength,
     required
 }) => {
-    const [value, setValue] = useState('');
+    const [value, setValue] = useState(null);
     const [error, setError] = useState('');
     const [selectedCountry, setSelectedCountry] = useState(countries[0]);
     const [isPasswordVisible, setIsPasswordVisible] = useState(password);
@@ -56,7 +57,7 @@ const CustomInput = ({
                     style={[
                         styles.input,
                         style2 ? styles.input2 : {},
-                        (error === false || (required && value === '')) && { borderColor: 'red', borderWidth: 2 },
+                        ((error === false && value !== null) || (required && value === null)) && { borderColor: 'red', borderWidth: 2 },
                         phone && { paddingLeft: 90 }
                     ]}
                     placeholder={placeholder}
@@ -67,6 +68,7 @@ const CustomInput = ({
                     editable={!disable}
                     maxLength={phone ? selectedCountry.phoneLength : maxLength}
                     keyboardType={phone ? 'numeric' : 'default'}
+                    defaultValue={defaultValue}
                 />
                 {icon && <View style={styles.icon}>{icon}</View>}
                 {password && (
@@ -75,7 +77,7 @@ const CustomInput = ({
                     </TouchableOpacity>
                 )}
                 {phone &&
-                    <View style={{ width: selectedCountry === countries[0] ? '100%' : 85, position: 'absolute', top: 2, left: 2, height: 60 }}>
+                    <View style={{ width: selectedCountry === countries[0] ? '98%' : 85, position: 'absolute', top: 2, left: 2, height: 60 }}>
                         <CustomSelect
                             options={countries}
                             placeholder="+55 21 9 0000-0000"
@@ -85,8 +87,8 @@ const CustomInput = ({
                     </View>
                 }
             </View>
-            {((error === false && value !== '')) && <Text style={styles.errorText}>{errorMessage}</Text>}
-            {(required && value === '') && <Text style={styles.errorText}>Please fill this field</Text>}
+            {((error === false && value !== null )) && <Text style={styles.errorText}>{errorMessage}</Text>}
+            {(required && value === null) && <Text style={styles.errorText}>Please fill this field</Text>}
         </View>
     );
 };

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { FlatList, StyleSheet, View } from "react-native";
 import { Colors } from "@/constants/Colors";
@@ -7,7 +7,7 @@ import CustomInput from "@/components/input/Input";
 import ToogleButton from "@/components/input/ToogleButton";
 import CustomSelect from "@/components/input/Select";
 import ImageInput from "@/components/input/ImageInput";
-import { checkinService } from "./service";
+import { getGuestDetails, saveGuestDetails } from "./service";
 import { AuthContext } from '@/contexts/AuthContext/AuthContext.js';
 import isValidEmail from "@/utils/isValidEmail";
 import isValidName from "@/utils/isValidName";
@@ -17,6 +17,31 @@ import isValidPassword from '@/utils/isValidPassword.js';
 
 export default function Checkin() {
     const { user } = useContext(AuthContext);
+
+    useEffect(() => {
+        const fetchGuestDetails = async () => {
+            const response = await getGuestDetails(user._id);
+            if (response.success) {
+                setFormData(prev => ({
+                    ...prev,
+                    email: response.guestDetails.guest.email || "",
+                    fullName: response.guestDetails.guest.fullName || "",
+                    phoneNumber: response.guestDetails.guest.phoneNumber || "",
+                    selectedCountry: response.guestDetails.guest.selectedCountry || "",
+                    appearPermission: response.guestDetails.guest.appearPermission || true,
+                    profileImage: response.guestDetails.guest.profileImage || null,
+                    idImg: response.guestDetails.guest.idImg || null,
+                    passaportImg: response.guestDetails.guest.passaportImg || null
+                }));
+                console.log(userData.fullName)
+            } else {
+                setError(response.error);
+            }
+            setLoading(false);
+        };
+
+        fetchGuestDetails()
+    }, [user])
 
     const [formData, setFormData] = useState({
         email: "",
@@ -97,17 +122,18 @@ export default function Checkin() {
         inputText.forEach(item => {
             const value = formData[item.key];
             const isValid = item.validator ? item.validator(value) : true;
-            console.log(`Field: ${item.label}, Value: ${value}, Valid: ${isValid}`);
+            // console.log(`Field: ${item.label}, Value: ${value}, Valid: ${isValid}`);
 
             if (!isValid) {
                 allValid = false;
                 console.log(`Field: ${item.label}, Value: ${value}, Valid: ${isValid}`);
+                setRequired(true)
             }
         });
 
         if (!isAnyFieldEmpty && allValid) {
             setRequired(false)
-            checkinService(guestDetails);
+            saveGuestDetails(guestDetails);
 
         } else {
             setRequired(true)
@@ -130,7 +156,6 @@ export default function Checkin() {
                         <CustomInput
                             placeholder={item.placeholder}
                             label={item.label}
-                            value={formData[item.key]}
                             onChangeText={value => handleInputChange(item.key, value)}
                             keyboardType={item.keyboardType || "default"}
                             password={item.password}
@@ -138,6 +163,7 @@ export default function Checkin() {
                             errorMessage={item.errorMessage}
                             phone={item.phone}
                             required={item.required}
+                            defaultValue={formData[item.key]}
                         />
                     )}
                     style={styles.form}

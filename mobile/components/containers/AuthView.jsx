@@ -28,7 +28,7 @@ export default function AuthView({
                         <Text style={styles.title}>{mainText}</Text>
                         {onProfileChange && <ImageInput onProfileChange={onProfileChange} style={styles.img} />}
                         <View style={handleSubmit ? styles.form : ''}>
-                            <ScrollView>
+                            <ScrollView showsVerticalScrollIndicator={false}>
                                 {children}
                             </ScrollView>
                             {errorMessage &&
