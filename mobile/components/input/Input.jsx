@@ -1,19 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 import { Colors } from "@/constants/Colors";
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const CustomInput = ({ 
-    label, 
-    placeholder, 
-    style2, 
-    icon, 
-    onChangeText, 
-    errorMessage, 
-    password, 
+const CustomInput = ({
+    label,
+    placeholder,
+    style2,
+    icon,
+    onChangeText,
+    errorMessage,
+    password,
     validator,
-    disable,
-    showErrors // Nova prop
+    disable
 }) => {
     const [value, setValue] = useState('');
     const [error, setError] = useState('');
@@ -24,8 +23,6 @@ const CustomInput = ({
         if (validator) {
             const validationError = validator(text);
             setError(validationError);
-        } else {
-            setError('');
         }
         if (onChangeText) {
             onChangeText(text);
@@ -36,13 +33,6 @@ const CustomInput = ({
         setIsPasswordVisible(!isPasswordVisible);
     };
 
-    useEffect(() => {
-        if (validator) {
-            const validationError = validator(value);
-            setError(validationError);
-        }
-    }, [value]);
-
     return (
         <View style={styles.container}>
             {label && <Text style={styles.label}>{label}</Text>}
@@ -51,14 +41,14 @@ const CustomInput = ({
                     style={[
                         styles.input,
                         style2 ? styles.input2 : {},
-                        (showErrors && (error || errorMessage)) ? styles.errorBorder : styles.removeBorder
+                        (error === false && value !== '') && { borderColor: 'red', borderWidth: 2 }
                     ]}
                     placeholder={placeholder}
                     placeholderTextColor="#888"
                     onChangeText={handleChange}
                     secureTextEntry={isPasswordVisible}
                     value={value}
-                    editable={!disable}
+                    editable={disable ? false : true}
                 />
                 {icon && <View style={styles.icon}>{icon}</View>}
                 {password && (
@@ -67,7 +57,7 @@ const CustomInput = ({
                     </TouchableOpacity>
                 )}
             </View>
-            {showErrors && (error || errorMessage) && <Text style={styles.errorText}>{error || errorMessage}</Text>}
+            {(error === false && value !== '') && <Text style={styles.errorText}>{errorMessage}</Text>}
         </View>
     );
 };
@@ -90,7 +80,6 @@ const styles = StyleSheet.create({
         padding: 15,
         fontSize: 16,
         borderRadius: 8,
-        borderWidth: 0,
         width: '100%',
         marginBottom: 8
     },
@@ -114,11 +103,7 @@ const styles = StyleSheet.create({
     errorText: {
         color: 'red',
         fontSize: 14,
-        marginTop: 0,
-    },
-    errorBorder: {
-        borderColor: 'red',
-        borderWidth: 2,
+        marginTop: -5,
     },
 });
 

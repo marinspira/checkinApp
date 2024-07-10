@@ -4,7 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 import defaultImg from '@/assets/images/unnamed.png';
 import { FontAwesome5 } from '@expo/vector-icons';
 
-const ImageInput = ({ onProfileChange, style, label }) => {
+const ImageInput = ({ onProfileChange, style, label, required }) => {
   const [imageInfo, setImageInfo] = useState({ uri: null, name: null });
 
   const handleChoosePhoto = async () => {
@@ -54,10 +54,17 @@ const ImageInput = ({ onProfileChange, style, label }) => {
       {label ? (
         <View style={{ width: '100%' }}>
           <Text style={styles.btnSimpleLabel}>{label}</Text>
-          <Pressable style={styles.btnSimple} onPress={handleChoosePhoto}>
+          <Pressable
+            style={[
+              styles.btnSimple,
+              (required && (imageInfo.name === null)) && { borderColor: 'red', borderWidth: 2, borderRadius: 8 }
+            ]}
+            onPress={handleChoosePhoto}
+          >
             <FontAwesome5 name="file-image" size={24} color="black" />
             <Text>{imageInfo.name || "Click here to upload"}</Text>
           </Pressable>
+          {(required && (imageInfo.name === null)) && <Text style={styles.errorText}>This field is required</Text>}
         </View>
       ) : (
         <Pressable style={styles.btn} onPress={handleChoosePhoto}>
@@ -97,7 +104,7 @@ const styles = StyleSheet.create({
     gap: 15,
     alignItems: 'center',
     paddingTop: 10,
-    paddingBottom: 30,
+    paddingBottom: 20,
     width: '100%',
     paddingHorizontal: 10,
     justifyContent: 'flex-start',
@@ -107,7 +114,13 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "700",
     marginBottom: 5,
-  }
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 14,
+    marginTop: 3,
+    marginBottom: 10
+  },
 });
 
 export default ImageInput;

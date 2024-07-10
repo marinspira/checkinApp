@@ -63,7 +63,17 @@ const positionSchema = new Schema({
         ref: 'Volunteer'
     }],
     slots: [slotSchema],
-    
+    requirements: [{
+        age: {
+            type: String,
+            required: true
+        },
+        languages: {
+            type: [String],
+            required: true
+        }
+    }]
+
 });
 
 module.exports = mongoose.model('Position', positionSchema);

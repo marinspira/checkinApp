@@ -3,7 +3,14 @@ import { View, Text, TouchableOpacity, Modal, FlatList, StyleSheet } from 'react
 import { Colors } from '../../constants/Colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const CustomSelect = ({ label, options, placeholder, onSelect, selectedValue }) => {
+const CustomSelect = ({
+    label,
+    options,
+    placeholder,
+    onSelect,
+    selectedValue,
+    required
+}) => {
     const [modalVisible, setModalVisible] = useState(false);
 
     const handleSelect = (value) => {
@@ -14,12 +21,20 @@ const CustomSelect = ({ label, options, placeholder, onSelect, selectedValue }) 
     return (
         <View style={styles.container}>
             {label && <Text style={styles.label}>{label}</Text>}
-            <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.selectContainer}>
+            <TouchableOpacity
+                onPress={() => setModalVisible(true)}
+                style={[
+                    styles.selectContainer,
+                    (required && (selectedValue === '')) && { borderColor: 'red', borderWidth: 2 }
+                ]}
+
+            >
                 <Text style={[styles.selectedValue, !selectedValue && styles.placeholder]}>
                     {selectedValue || placeholder}
                 </Text>
                 <Icon name="chevron-down" size={16} color="#888" />
             </TouchableOpacity>
+            {(required && (selectedValue === '')) && <Text style={styles.errorText}>This field is required</Text>}
             <Modal
                 transparent={true}
                 animationType="slide"
@@ -47,7 +62,7 @@ const CustomSelect = ({ label, options, placeholder, onSelect, selectedValue }) 
 const styles = StyleSheet.create({
     container: {
         width: '100%',
-        marginBottom: 20,
+        marginBottom: 15,
     },
     label: {
         fontSize: 15,
@@ -87,6 +102,11 @@ const styles = StyleSheet.create({
     },
     optionText: {
         fontSize: 16,
+    },
+    errorText: {
+        color: 'red',
+        fontSize: 14,
+        marginTop: 5,
     },
 });
 

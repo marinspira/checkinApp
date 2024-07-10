@@ -9,8 +9,10 @@ import CustomSelect from "@/components/input/Select";
 import ImageInput from "@/components/input/ImageInput";
 import { checkinService } from "./service";
 import { AuthContext } from '@/contexts/AuthContext/AuthContext.js'
-import isValidEmail from "../../utils/isValidEmail";
-import isValidName from "../../utils/isValidName";
+import isValidEmail from "@/utils/isValidEmail";
+import isValidName from "@/utils/isValidName";
+import isValidPassword from "@/utils/isValidPassoword";
+
 export default function Checkin() {
 
     const { user } = useContext(AuthContext)
@@ -25,8 +27,7 @@ export default function Checkin() {
     const [idImg, setIdImg] = useState(null)
     const [passaportImg, setPassaportImg] = useState(null)
     const [phoneNumber, setPhoneNumber] = useState('')
-
-    const [showErrors, setShowErrors] = useState(false);
+    const [showError, setShowError] = useState(false)
 
     const [hostelCountry, SetHostelCountry] = useState('');
 
@@ -78,14 +79,14 @@ export default function Checkin() {
         }
     };
 
-    const data = [
+    const inputText = [
         {
             id: '1',
             placeholder: "João da Silva Ferreira",
             label: "Your name",
             key: "fullName",
             validator: isValidName,
-            errorMessage: 'Name invalid'
+            errorMessage: 'Please type your full name'
         },
         {
             id: '2',
@@ -94,20 +95,23 @@ export default function Checkin() {
             key: "email",
             keyboardType: "email-address",
             validator: isValidEmail,
-            errorMessage: 'Email invalid'
+            errorMessage: 'Please enter a valid email address'
         },
         {
             id: '3',
             placeholder: 'Your password here',
             label: "Your password",
             key: "password",
-            password: true
+            password: true,
+            validator: isValidPassword,
+            errorMessage: 'The password must be at least 8 characters long, including upper and lower case letters, numbers and special characters.'
         },
         {
             id: '4',
             placeholder: '+55 21 0 0000-0000',
             label: "Your phone number",
             key: "phoneNumber",
+
         },
     ];
 
@@ -128,10 +132,20 @@ export default function Checkin() {
     };
 
     function handleSubmit() {
-        console.log(user)
-        setShowErrors(true)
-        checkinService(guestDetails);
+        setShowError(true)
+        const isValid = inputText.every(
+            item =>
+                !item.validator ||
+                !item.validator(guestDetails[item.key])
+        );
+
+        if (isValid) {
+            checkinService(guestDetails);
+        } else {
+            console.log("Please correct the errors in the form.");
+        }
     }
+
 
     return (
         <View style={styles.container}>
@@ -140,12 +154,11 @@ export default function Checkin() {
                 onProfileChange={(result) => handleImageChange('profileImage', result)}
                 handleSubmit={handleSubmit}
             >
-                {data && <FlatList
-                    data={data}
+                {inputText && <FlatList
+                    data={inputText}
                     keyExtractor={item => item.id}
                     renderItem={({ item }) => (
                         <CustomInput
-                            style2={false}
                             placeholder={item.placeholder}
                             label={item.label}
                             value={user[item.key]}
@@ -154,7 +167,6 @@ export default function Checkin() {
                             password={item?.password}
                             validator={item?.validator}
                             errorMessage={item?.errorMessage}
-                            showErrors={showErrors}
                         />
                     )}
                     style={styles.form}
@@ -166,14 +178,20 @@ export default function Checkin() {
                     placeholder="Select your country"
                     onSelect={handleSelect}
                     selectedValue={selectedCountry}
+                    required={showError}
                 />
                 {selectedCountry === hostelCountry &&
                     <ImageInput
                         onProfileChange={(result) => handleImageChange('idImg', result)}
                         label="Your ID image"
+                        // required={showError}
                     />
                 }
-                <ImageInput onProfileChange={(result) => handleImageChange('passaportImg', result)} label="Your passaport image" />
+                <ImageInput
+                    onProfileChange={(result) => handleImageChange('passaportImg', result)}
+                    label="Your passaport image"
+                    // required={showError}
+                />
                 <ToogleButton
                     selected={appearPermission}
                     label="I want to apper and view other guests."
