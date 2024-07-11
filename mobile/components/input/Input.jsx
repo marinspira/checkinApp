@@ -4,7 +4,6 @@ import { Colors } from "@/constants/Colors";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import CustomSelect from "./Select";
 import { countries } from "@/utils/countries";
-import isValidPhone from "../../utils/isValidPhone";
 
 const CustomInput = ({
     label,
@@ -77,7 +76,7 @@ const CustomInput = ({
                     </TouchableOpacity>
                 )}
                 {phone &&
-                    <View style={{ width: selectedCountry === countries[0] ? '98%' : 85, position: 'absolute', top: 2, left: 2, height: 60 }}>
+                    <View style={{ width: (selectedCountry === countries[0] && phone && defaultValue !== '' || null) ? '98%' : 85, position: 'absolute', top: 2, left: 2, height: 60 }}>
                         <CustomSelect
                             options={countries}
                             placeholder="+55 21 9 0000-0000"
@@ -87,8 +86,8 @@ const CustomInput = ({
                     </View>
                 }
             </View>
-            {((error === false && value !== null )) && <Text style={styles.errorText}>{errorMessage}</Text>}
-            {(required && value === null) && <Text style={styles.errorText}>Please fill this field</Text>}
+            {((error === false && (value !== null || ''))) && <Text style={styles.errorText}>{errorMessage}</Text>}
+            {(required && (value === null || '')) && <Text style={styles.errorText}>Please fill this field</Text>}
         </View>
     );
 };

@@ -6,33 +6,34 @@ export const saveGuestDetails = async (req, res) => {
         const {
             fullName,
             phoneNumber,
-            idPhoto,
-            passaportPhoto,
-            profilePicture,
+            idImg,
+            passaportImg,
+            // profileImg,
             appearPermission,
             country,
             userId
         } = req.body.guestDetails;
 
         const user = await User.findById(userId);
+
         if (user) {
             let guest = await Guest.findOne({ userId });
 
             if (guest) {
                 guest.fullName = fullName;
                 guest.phoneNumber = phoneNumber;
-                guest.idPhoto = idPhoto;
-                guest.passaportPhoto = passaportPhoto;
-                guest.profilePicture = profilePicture;
+                guest.idImg = idImg;
+                guest.passaportImg = passaportImg;
+                // guest.profileImg = profileImg;
                 guest.appearPermission = appearPermission;
                 guest.country = country;
             } else {
                 guest = new Guest({
                     fullName,
                     phoneNumber,
-                    idPhoto,
-                    passaportPhoto,
-                    profilePicture,
+                    idImg,
+                    passaportImg,
+                    // profileImg,
                     appearPermission,
                     country,
                     userId
@@ -54,8 +55,8 @@ export const getGuestDetails = async (req, res) => {
     try {
         const { userId } = req.params;
 
-        console.log(userId)
-        console.log('userId')
+        // console.log(userId)
+        // console.log('userId')
 
         const guest = await Guest.findOne({ userId });
 

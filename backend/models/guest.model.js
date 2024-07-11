@@ -12,17 +12,24 @@ const guestSchema = new Schema({
         type: String,
         required: true
     },
-    idPhoto: {
-        data: Buffer,
-        contentType: String 
+    phoneNumber: {
+        type: String,
+        required: true
     },
-    passaportPhoto: {
-        data: Buffer,
-        contentType: String 
-    },
-    profilePicture: {
-        data: Buffer,
+    idImg: {
+        data: String,
         contentType: String
+    },
+    passaportImg: {
+        data: String,
+        contentType: String
+    },
+    profileImg: {
+        type: String,
+    },
+    selectedCountry: {
+        type: String,
+        // required: true
     },
     appearPermission: {
         type: Boolean,

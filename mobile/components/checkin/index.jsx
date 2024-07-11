@@ -7,7 +7,7 @@ import CustomInput from "@/components/input/Input";
 import ToogleButton from "@/components/input/ToogleButton";
 import CustomSelect from "@/components/input/Select";
 import ImageInput from "@/components/input/ImageInput";
-import { getGuestDetails, saveGuestDetails } from "./service";
+import { getGuestDetails, saveGuestDetails, saveImg } from "./service";
 import { AuthContext } from '@/contexts/AuthContext/AuthContext.js';
 import isValidEmail from "@/utils/isValidEmail";
 import isValidName from "@/utils/isValidName";
@@ -17,6 +17,21 @@ import isValidPassword from '@/utils/isValidPassword.js';
 
 export default function Checkin() {
     const { user } = useContext(AuthContext);
+
+    const [formData, setFormData] = useState({
+        email: "",
+        password: "",
+        fullName: "",
+        phoneNumber: "",
+        selectedCountry: "",
+        appearPermission: true,
+        profileImg: null,
+        idImg: null,
+        passaportImg: null
+    });
+
+    const [required, setRequired] = useState(false);
+    const [hostelCountry, SetHostelCountry] = useState('');
 
     useEffect(() => {
         const fetchGuestDetails = async () => {
@@ -29,11 +44,11 @@ export default function Checkin() {
                     phoneNumber: response.guestDetails.guest.phoneNumber || "",
                     selectedCountry: response.guestDetails.guest.selectedCountry || "",
                     appearPermission: response.guestDetails.guest.appearPermission || true,
-                    profileImage: response.guestDetails.guest.profileImage || null,
+                    profileImg: response.guestDetails.guest.profileImg || null,
                     idImg: response.guestDetails.guest.idImg || null,
                     passaportImg: response.guestDetails.guest.passaportImg || null
                 }));
-                console.log(userData.fullName)
+                console.log(formData.profileImg)
             } else {
                 setError(response.error);
             }
@@ -43,27 +58,27 @@ export default function Checkin() {
         fetchGuestDetails()
     }, [user])
 
-    const [formData, setFormData] = useState({
-        email: "",
-        password: "",
-        fullName: "",
-        phoneNumber: "",
-        selectedCountry: "",
-        appearPermission: true,
-        profileImage: null,
-        idImg: null,
-        passaportImg: null
-    });
-
-    const [required, setRequired] = useState(false);
-    const [hostelCountry, SetHostelCountry] = useState('');
-
     const handleInputChange = (key, value) => {
         setFormData(prev => ({ ...prev, [key]: value }));
     };
 
     const handleImageChange = (key, result) => {
-        setFormData(prev => ({ ...prev, [key]: result }));
+
+        const imageUri = result.assets[0].uri;
+
+        let filename = result.assets[0].fileName
+        let match = /\.(\w+)$/.exec(filename);
+        let type = match ? `image/${match[1]}` : `image`;
+
+        let formData = new FormData()
+        const userId = user._id
+
+        formData.append('photo', { uri: imageUri, name: filename, type })
+        formData.append('userId', userId);
+
+        saveImg(formData)
+
+        setFormData(prev => ({ ...prev, [key]: imageUri }));
     };
 
     const inputText = [
@@ -126,13 +141,15 @@ export default function Checkin() {
 
             if (!isValid) {
                 allValid = false;
-                console.log(`Field: ${item.label}, Value: ${value}, Valid: ${isValid}`);
                 setRequired(true)
+                // console.log(`Field: ${item.label}, Value: ${value}, Valid: ${isValid}`);
             }
         });
 
         if (!isAnyFieldEmpty && allValid) {
             setRequired(false)
+
+
             saveGuestDetails(guestDetails);
 
         } else {
@@ -145,7 +162,7 @@ export default function Checkin() {
         <View style={styles.container}>
             <StatusBar barStyle="dark-content" />
             <AuthView
-                onProfileChange={(result) => handleImageChange('profileImage', result)}
+                onProfileChange={(result) => handleImageChange('profileImg', result)}
                 handleSubmit={handleSubmit}
                 errorMessage={(required === true) && 'Please correct the errors in the form.'}
             >
@@ -158,7 +175,7 @@ export default function Checkin() {
                             label={item.label}
                             onChangeText={value => handleInputChange(item.key, value)}
                             keyboardType={item.keyboardType || "default"}
-                            password={item.password}
+                            password={item?.password}
                             validator={item.validator}
                             errorMessage={item.errorMessage}
                             phone={item.phone}

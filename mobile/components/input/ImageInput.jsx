@@ -5,6 +5,7 @@ import defaultImg from '@/assets/images/unnamed.png';
 import { FontAwesome5 } from '@expo/vector-icons';
 
 const ImageInput = ({ onProfileChange, style, label, required }) => {
+
   const [imageInfo, setImageInfo] = useState({ uri: null, name: null });
 
   const handleChoosePhoto = async () => {
