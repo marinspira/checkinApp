@@ -21,7 +21,7 @@ export const getGuestDetails = async (userId) => {
         const response = await axios.get(`https://6a17-171-6-243-149.ngrok-free.app/api/checkin/guest/${userId}`);
 
         const guestDetails = response.data;
-        // console.log(guestDetails);
+        console.log(guestDetails);
 
         return { success: true, guestDetails };
 

@@ -70,7 +70,7 @@ const CustomInput = ({
                     editable={!disable}
                     maxLength={phone ? selectedCountry.phoneLength : maxLength}
                     keyboardType={phone ? 'numeric' : 'default'}
-                    defaultValue={defaultValue ? defaultValue : null}
+                    defaultValue={defaultValue}
                 />
                 {icon && <View style={styles.icon}>{icon}</View>}
                 {password && (

@@ -33,7 +33,16 @@ export default function Checkin({ closeWindow }) {
         passaportImg: null
     };
 
-    const [formData, setFormData] = useState(initialFormData);
+    const [formData, setFormData] = useState({
+        email: "",
+        password: "",
+        fullName: "",
+        phoneNumber: "",
+        selectedCountry: "",
+        appearPermission: true,
+        idImg: null,
+        passaportImg: null
+    });
 
     const inputText = [
         {
@@ -105,7 +114,7 @@ export default function Checkin({ closeWindow }) {
             }
         };
         fetchGuestDetails();
-    }, [user._id]);
+    }, [closeWindow]);
 
     const handleInputChange = (key, value) => {
         setFormData(prev => ({ ...prev, [key]: value }));
@@ -135,9 +144,9 @@ export default function Checkin({ closeWindow }) {
 
             console.log(`value: ${value}, is valid: ${isValid}`)
 
-            if (value === item.placeholder) {
-                isValid = false;
-            }
+            // if (value === item.placeholder) {
+            //     isValid = false;
+            // }
 
             if (item.key === "password" && value === "password") {
                 isValid = true;
