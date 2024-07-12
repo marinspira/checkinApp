@@ -16,7 +16,7 @@ import isValidPhone from "@/utils/isValidPhone";
 import isValidPassword from "@/utils/isValidPassword.js";
 import { showToast } from "../toast";
 
-export default function Checkin() {
+export default function Checkin({ closeWindow }) {
     const { user } = useContext(AuthContext);
 
     const [required, setRequired] = useState(false);
@@ -26,7 +26,7 @@ export default function Checkin() {
         email: "Email@hostelApp.com",
         password: "Your password here",
         fullName: "João da Silva Ferreira",
-        phoneNumber: "+55 21 0 0000-0000",
+        phoneNumber: "21 0 0000-0000",
         selectedCountry: "",
         appearPermission: true,
         idImg: null,
@@ -67,7 +67,7 @@ export default function Checkin() {
         },
         {
             id: '4',
-            placeholder: '+55 21 0 0000-0000',
+            placeholder: '21 0 0000-0000',
             label: "Your phone number",
             key: "phoneNumber",
             phone: true,
@@ -135,7 +135,6 @@ export default function Checkin() {
 
             console.log(`value: ${value}, is valid: ${isValid}`)
 
-            // Tratar valor default como vazio
             if (value === item.placeholder) {
                 isValid = false;
             }
@@ -176,6 +175,7 @@ export default function Checkin() {
                 onProfileChange={(result) => handleImageChange('profileImg', result)}
                 handleSubmit={handleSubmit}
                 errorMessage={required && 'Please correct the errors in the form.'}
+                closeWindow={closeWindow}
             >
                 <FlatList
                     data={inputText}

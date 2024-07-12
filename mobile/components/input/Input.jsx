@@ -20,7 +20,7 @@ const CustomInput = ({
     maxLength,
     required
 }) => {
-    const [value, setValue] = useState(null);
+    const [value, setValue] = useState(defaultValue || '');
     const [error, setError] = useState('');
     const [selectedCountry, setSelectedCountry] = useState(countries[0]);
     const [isPasswordVisible, setIsPasswordVisible] = useState(password);
@@ -32,7 +32,7 @@ const CustomInput = ({
         setValue(text);
         if (validator) {
             const validationError = validator(text, selectedCountry.phoneLength);
-            setError(validationError);
+            setError(!validationError);
         }
         if (onChangeText) {
             if (text === '') {
@@ -59,7 +59,7 @@ const CustomInput = ({
                     style={[
                         styles.input,
                         style2 ? styles.input2 : {},
-                        ((error === false && value && defaultValue !== null) || (required && defaultValue === '')) && { borderColor: 'red', borderWidth: 2 },
+                        ((error && value && defaultValue !== null) || (required && defaultValue === '')) && { borderColor: 'red', borderWidth: 2 },
                         phone && { paddingLeft: 90 }
                     ]}
                     placeholder={placeholder}
@@ -79,18 +79,22 @@ const CustomInput = ({
                     </TouchableOpacity>
                 )}
                 {phone &&
-                    <View style={{ width: (selectedCountry === countries[0] && phone && defaultValue !== '' || null) ? '98%' : 85, position: 'absolute', top: 2, left: 2, height: 60 }}>
+                    <View style={{ width: 85, position: 'absolute', top: 2, left: 2, height: 60 }}>
                         <CustomSelect
                             options={countries}
-                            placeholder="+55 21 9 0000-0000"
+                            placeholder="+00"
                             onSelect={handleSelect}
-                            selectedValue={selectedCountry.code}
+                            selectedValue={selectedCountry.value}
                         />
                     </View>
                 }
             </View>
-            {((error === false && (value && defaultValue !== null))) && <Text style={styles.errorText}>{errorMessage}</Text>}
-            {(required && (defaultValue === '')) && <Text style={styles.errorText}>Please fill this field</Text>}
+            {((error && (value && defaultValue !== null))) &&
+                <Text style={styles.errorText}>{errorMessage}</Text>
+            }
+            {(required && (value === '')) &&
+                <Text style={styles.errorText}>Please fill this field</Text>
+            }
         </View>
     );
 };

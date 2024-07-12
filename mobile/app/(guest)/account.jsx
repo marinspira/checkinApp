@@ -1,13 +1,22 @@
+import React, { useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import AuthView from '@/components/containers/AuthView.jsx';
 import Checkin from "@/components/checkin";
-import { StyleSheet } from "react-native";
 
 export default function Account() {
+    const [view, setView] = useState('home');
 
-    return (
-        <Checkin />
-    )
+    if (view === 'home') {
+        return (
+            <AuthView>
+                <Text onPress={() => setView('checkin')}>Checkin</Text>
+            </AuthView>
+        );
+    } else if (view === 'checkin') {
+        return <Checkin closeWindow={() => setView('home')} />;
+    }
 }
 
 const styles = StyleSheet.create({
 
-})
+});

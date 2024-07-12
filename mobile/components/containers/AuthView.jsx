@@ -13,12 +13,13 @@ export default function AuthView({
     mainText,
     handleSubmit,
     alternativeText,
-    onProfileChange
+    onProfileChange,
+    closeWindow
 }) {
     return (
         <SafeAreaView style={styles.container}>
             <View style={{ maxHeight: '75%' }}>
-                {onProfileChange && <Ionicons name="close-circle-outline" style={styles.closeButton} size={35} color="black" />}
+                {closeWindow && <Ionicons onPress={closeWindow} name="close-circle-outline" style={styles.closeButton} size={35} color="black" />}
                 <KeyboardAvoidingView
                     behavior={Platform.OS === "ios" ? "padding" : "height"}
                     style={{ flex: 1 }}
