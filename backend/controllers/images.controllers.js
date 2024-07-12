@@ -43,7 +43,7 @@ export const uploadImage = async (req, res) => {
             }
 
             await guest.save();
-            res.status(201).json({ message: "Guest details saved successfully", guest });
+            res.status(201).json({ message: "Guest details saved successfully" });
 
         } else {
             res.status(404).json({ error: "User not found" });

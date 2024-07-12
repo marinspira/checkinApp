@@ -7,6 +7,7 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { StyleSheet } from 'react-native';
+import Toast from "react-native-toast-message";
 import { Colors } from '@/constants/Colors';
 import { AuthProvider } from '@/contexts/AuthContext/AuthContext'
 
@@ -33,6 +34,10 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <AuthProvider>
         <Slot />
+        <Toast
+            position='top'
+            topOffset={60}
+        />
       </AuthProvider>
     </ThemeProvider>
   );
