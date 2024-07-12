@@ -35,6 +35,9 @@ const CustomInput = ({
             setError(validationError);
         }
         if (onChangeText) {
+            if (text === '') {
+                onChangeText(defaultValue)
+            }
             onChangeText(text);
         }
     };
@@ -56,7 +59,7 @@ const CustomInput = ({
                     style={[
                         styles.input,
                         style2 ? styles.input2 : {},
-                        ((error === false && value !== null) || (required && value === null)) && { borderColor: 'red', borderWidth: 2 },
+                        ((error === false && value && defaultValue !== null) || (required && defaultValue === '')) && { borderColor: 'red', borderWidth: 2 },
                         phone && { paddingLeft: 90 }
                     ]}
                     placeholder={placeholder}
@@ -67,7 +70,7 @@ const CustomInput = ({
                     editable={!disable}
                     maxLength={phone ? selectedCountry.phoneLength : maxLength}
                     keyboardType={phone ? 'numeric' : 'default'}
-                    defaultValue={defaultValue}
+                    defaultValue={defaultValue ? defaultValue : null}
                 />
                 {icon && <View style={styles.icon}>{icon}</View>}
                 {password && (
@@ -86,8 +89,8 @@ const CustomInput = ({
                     </View>
                 }
             </View>
-            {((error === false && (value !== null || ''))) && <Text style={styles.errorText}>{errorMessage}</Text>}
-            {(required && (value === null || '')) && <Text style={styles.errorText}>Please fill this field</Text>}
+            {((error === false && (value && defaultValue !== null))) && <Text style={styles.errorText}>{errorMessage}</Text>}
+            {(required && (defaultValue === '')) && <Text style={styles.errorText}>Please fill this field</Text>}
         </View>
     );
 };

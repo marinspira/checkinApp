@@ -8,7 +8,6 @@ export const saveGuestDetails = async (req, res) => {
             phoneNumber,
             idImg,
             passaportImg,
-            // profileImg,
             appearPermission,
             country,
             userId
@@ -24,7 +23,6 @@ export const saveGuestDetails = async (req, res) => {
                 guest.phoneNumber = phoneNumber;
                 guest.idImg = idImg;
                 guest.passaportImg = passaportImg;
-                // guest.profileImg = profileImg;
                 guest.appearPermission = appearPermission;
                 guest.country = country;
             } else {
@@ -33,7 +31,6 @@ export const saveGuestDetails = async (req, res) => {
                     phoneNumber,
                     idImg,
                     passaportImg,
-                    // profileImg,
                     appearPermission,
                     country,
                     userId
@@ -54,14 +51,29 @@ export const saveGuestDetails = async (req, res) => {
 export const getGuestDetails = async (req, res) => {
     try {
         const { userId } = req.params;
-
-        // console.log(userId)
-        // console.log('userId')
-
         const guest = await Guest.findOne({ userId });
 
         if (guest) {
-            res.status(200).json({ guest });
+            const user = await User.findOne({ _id: userId });
+            const { email, password } = user;
+
+            let guestDetails;
+
+            if (password !== '') {
+                guestDetails = {
+                    ...guest._doc,
+                    email,
+                    password: "password"
+                };
+            } else {
+                guestDetails = {
+                    ...guest._doc,
+                    email,
+                };
+            }
+
+            console.log(guestDetails);
+            res.status(200).json({ guest: guestDetails });
         } else {
             res.status(404).json({ error: "Guest details not found" });
         }

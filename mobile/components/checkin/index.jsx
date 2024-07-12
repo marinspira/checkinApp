@@ -13,7 +13,7 @@ import isValidEmail from "@/utils/isValidEmail";
 import isValidName from "@/utils/isValidName";
 import { countries } from "@/utils/countries";
 import isValidPhone from "@/utils/isValidPhone";
-import isValidPassword from '@/utils/isValidPassword.js';
+import isValidPassword from "@/utils/isValidPassword.js";
 import { showToast } from "../toast";
 
 export default function Checkin() {
@@ -22,17 +22,18 @@ export default function Checkin() {
     const [required, setRequired] = useState(false);
     const [hostelCountry, SetHostelCountry] = useState('');
 
-    const [formData, setFormData] = useState({
-        email: "",
-        password: "",
-        fullName: "",
-        phoneNumber: "",
+    const initialFormData = {
+        email: "Email@hostelApp.com",
+        password: "Your password here",
+        fullName: "João da Silva Ferreira",
+        phoneNumber: "+55 21 0 0000-0000",
         selectedCountry: "",
         appearPermission: true,
-        // profileImg: null,
         idImg: null,
         passaportImg: null
-    });
+    };
+
+    const [formData, setFormData] = useState(initialFormData);
 
     const inputText = [
         {
@@ -84,80 +85,86 @@ export default function Checkin() {
     useEffect(() => {
         const fetchGuestDetails = async () => {
             const response = await getGuestDetails(user._id);
-            const guestDetails = response.guestDetails.guest
+            const guestDetails = response.guestDetails.guest;
 
             if (response.success) {
                 setFormData(prev => ({
                     ...prev,
                     email: guestDetails.email || "",
                     fullName: guestDetails.fullName || "",
+                    password: guestDetails.password || "",
                     phoneNumber: guestDetails.phoneNumber || "",
                     selectedCountry: guestDetails.selectedCountry || "",
                     appearPermission: guestDetails.appearPermission || true,
-                    // profileImg: guestDetails.profileImg || null,
                     idImg: guestDetails.idImg || null,
                     passaportImg: guestDetails.passaportImg || null
                 }));
-
             } else {
                 setError(response.error);
-                showToast('error', 'Sorry, we could not find your checkin details', response.error)
+                showToast('error', 'Sorry, we could not find your checkin details', response.error);
             }
         };
-        fetchGuestDetails()
-    }, [])
+        fetchGuestDetails();
+    }, [user._id]);
 
     const handleInputChange = (key, value) => {
         setFormData(prev => ({ ...prev, [key]: value }));
     };
 
     const handleImageChange = (key, result) => {
-
         const imageUri = result.assets[0].uri;
+        const filename = result.assets[0].fileName;
+        const match = /\.(\w+)$/.exec(filename);
+        const type = match ? `image/${match[1]}` : `image`;
 
-        let filename = result.assets[0].fileName
-        let match = /\.(\w+)$/.exec(filename);
-        let type = match ? `image/${match[1]}` : `image`;
+        const formData = new FormData();
+        const userId = user._id;
 
-        let formData = new FormData()
-        const userId = user._id
-
-        formData.append('photo', { uri: imageUri, name: filename, type })
+        formData.append('photo', { uri: imageUri, name: filename, type });
         formData.append('userId', userId);
 
-        saveImg(formData)
+        saveImg(formData);
     };
 
     const handleSubmit = async () => {
-
-        const isAnyFieldEmpty = inputText.some(item => item.required && item.isEmpty);
-
         let allValid = true;
 
-        inputText.forEach(item => {
+        for (const item of inputText) {
             const value = formData[item.key];
-            const isValid = item.validator ? item.validator(value) : true;
+            let isValid = item.validator ? item.validator(value) : true;
+
+            console.log(`value: ${value}, is valid: ${isValid}`)
+
+            // Tratar valor default como vazio
+            if (value === item.placeholder) {
+                isValid = false;
+            }
+
+            if (item.key === "password" && value === "password") {
+                isValid = true;
+            }
 
             if (!isValid) {
                 allValid = false;
-                setRequired(true)
+                break;
             }
-        });
+        }
+
+        const isAnyFieldEmpty = inputText.some(item => item.required && (!formData[item.key] || formData[item.key] === item.placeholder));
 
         if (!isAnyFieldEmpty && allValid) {
-            setRequired(false)
+            setRequired(false);
 
             const reqGuest = await saveGuestDetails(guestDetails);
 
             if (reqGuest.success) {
-                showToast('sucess', 'Guest data saved!', '')
+                showToast('success', 'Guest data saved!', '');
             } else {
-                showToast('error', 'Please correct the errors in the form.', '')
+                showToast('error', 'Please correct the errors in the form.', '');
             }
-
         } else {
-            setRequired(true)
-            showToast('error', 'Please correct the errors in the form.', '')
+            setRequired(true);
+            showToast('error', 'Please correct the errors in the form.', '');
             console.log("Please correct the errors in the form.");
         }
     };
@@ -168,14 +175,13 @@ export default function Checkin() {
             <AuthView
                 onProfileChange={(result) => handleImageChange('profileImg', result)}
                 handleSubmit={handleSubmit}
-                errorMessage={(required === true) && 'Please correct the errors in the form.'}
+                errorMessage={required && 'Please correct the errors in the form.'}
             >
                 <FlatList
                     data={inputText}
                     keyExtractor={item => item.id}
                     renderItem={({ item }) => (
-                        // hide the password input if it alredy exists 
-                        ((formData[item.key] === 'password') && (formData[item.value] !== '')) &&
+                        (item.key !== 'password' || formData.password === '') &&
                         <CustomInput
                             placeholder={item.placeholder}
                             label={item.label}
