@@ -2,12 +2,12 @@ import axios from 'axios'
 
 export const saveGuestDetails = async (guestDetails) => {
     try {
-        const response = await axios.put(`https://6a17-171-6-243-149.ngrok-free.app/api/checkin/guest`, {
+        const response = await axios.put(`https://8d13-171-6-244-48.ngrok-free.app/api/checkin/guest`, {
             guestDetails
         });
 
         const guest = response.data;
-        console.log(guest)
+        console.log('Save checkin details',guest)
         return { success: true };
 
     } catch (error) {
@@ -18,7 +18,7 @@ export const saveGuestDetails = async (guestDetails) => {
 
 export const getGuestDetails = async (userId) => {
     try {
-        const response = await axios.get(`https://6a17-171-6-243-149.ngrok-free.app/api/checkin/guest/${userId}`);
+        const response = await axios.get(`https://8d13-171-6-244-48.ngrok-free.app/api/checkin/guest/${userId}`);
 
         const guestDetails = response.data;
         console.log(guestDetails);
@@ -33,7 +33,7 @@ export const getGuestDetails = async (userId) => {
 
 export const saveImg = async (formData) => {
     try {
-        const response = await axios.post('https://6a17-171-6-243-149.ngrok-free.app/api/upload/upload', formData, {
+        const response = await axios.post('https://8d13-171-6-244-48.ngrok-free.app/api/checkin/guest/saveProfilePhoto', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }

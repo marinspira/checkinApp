@@ -14,7 +14,8 @@ export default function AuthView({
     handleSubmit,
     alternativeText,
     onProfileChange,
-    closeWindow
+    closeWindow,
+    profileImg
 }) {
     return (
         <SafeAreaView style={styles.container}>
@@ -27,7 +28,7 @@ export default function AuthView({
                     <View style={styles.content}>
                         {logo && <Image style={styles.logo} source={require('@/assets/images/logo.png')} />}
                         <Text style={styles.title}>{mainText}</Text>
-                        {onProfileChange && <ImageInput onProfileChange={onProfileChange} style={styles.img} />}
+                        {onProfileChange && <ImageInput profileImg={profileImg} onProfileChange={onProfileChange} style={styles.img} />}
                         <View style={handleSubmit ? styles.form : ''}>
                             <ScrollView showsVerticalScrollIndicator={false}>
                                 {children}

@@ -20,7 +20,7 @@ const CustomInput = ({
     maxLength,
     required
 }) => {
-    const [value, setValue] = useState(defaultValue || '');
+    const [value, setValue] = useState(defaultValue);
     const [error, setError] = useState('');
     const [selectedCountry, setSelectedCountry] = useState(countries[0]);
     const [isPasswordVisible, setIsPasswordVisible] = useState(password);
@@ -62,7 +62,7 @@ const CustomInput = ({
                         ((error && value && defaultValue !== null) || (required && defaultValue === '')) && { borderColor: 'red', borderWidth: 2 },
                         phone && { paddingLeft: 90 }
                     ]}
-                    placeholder={placeholder}
+                    placeholder={defaultValue || placeholder}
                     placeholderTextColor="#888"
                     onChangeText={handleChange}
                     secureTextEntry={isPasswordVisible}

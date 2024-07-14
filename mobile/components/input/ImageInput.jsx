@@ -1,12 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Image, StyleSheet, Pressable, Text } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import defaultImg from '@/assets/images/unnamed.png';
 import { FontAwesome5 } from '@expo/vector-icons';
 
-const ImageInput = ({ onProfileChange, style, label, required }) => {
+const ImageInput = ({ onProfileChange, style, label, required, profileImg }) => {
 
   const [imageInfo, setImageInfo] = useState({ uri: null, name: null });
+
+  useEffect(() => {
+    if (profileImg) {
+      const normalizedPath = profileImg.replace(/^\./, '');
+      setImageInfo({ uri: `${process.env.EXPO_PUBLIC_SERVER_ADDRESS + normalizedPath}` });
+    }
+  }, [profileImg]);
+
 
   const handleChoosePhoto = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();

@@ -21,17 +21,9 @@ export default function Checkin({ closeWindow }) {
 
     const [required, setRequired] = useState(false);
     const [hostelCountry, SetHostelCountry] = useState('');
-
-    const initialFormData = {
-        email: "Email@hostelApp.com",
-        password: "Your password here",
-        fullName: "João da Silva Ferreira",
-        phoneNumber: "21 0 0000-0000",
-        selectedCountry: "",
-        appearPermission: true,
-        idImg: null,
-        passaportImg: null
-    };
+    const [profileImg, setProfileImg] = useState(null);
+    const [idImg, setIdImg] = useState(null);
+    const [passaportImg, setPassaportImg] = useState(null);
 
     const [formData, setFormData] = useState({
         email: "",
@@ -40,8 +32,6 @@ export default function Checkin({ closeWindow }) {
         phoneNumber: "",
         selectedCountry: "",
         appearPermission: true,
-        idImg: null,
-        passaportImg: null
     });
 
     const inputText = [
@@ -88,7 +78,10 @@ export default function Checkin({ closeWindow }) {
 
     const guestDetails = {
         ...formData,
-        userId: user._id
+        userId: user._id,
+        profileImg,
+        idImg,
+        passaportImg,
     };
 
     useEffect(() => {
@@ -105,22 +98,22 @@ export default function Checkin({ closeWindow }) {
                     phoneNumber: guestDetails.phoneNumber || "",
                     selectedCountry: guestDetails.selectedCountry || "",
                     appearPermission: guestDetails.appearPermission || true,
-                    idImg: guestDetails.idImg || null,
-                    passaportImg: guestDetails.passaportImg || null
                 }));
+                setProfileImg(guestDetails.profileImg || null);
+                setIdImg(guestDetails.idImg || null);
+                setPassaportImg(guestDetails.passaportImg || null);
             } else {
-                setError(response.error);
                 showToast('error', 'Sorry, we could not find your checkin details', response.error);
             }
         };
         fetchGuestDetails();
-    }, [closeWindow]);
+    }, []);
 
     const handleInputChange = (key, value) => {
         setFormData(prev => ({ ...prev, [key]: value }));
     };
 
-    const handleImageChange = (key, result) => {
+    const handleImageChange = async (key, result) => {
         const imageUri = result.assets[0].uri;
         const filename = result.assets[0].fileName;
         const match = /\.(\w+)$/.exec(filename);
@@ -132,7 +125,17 @@ export default function Checkin({ closeWindow }) {
         formData.append('photo', { uri: imageUri, name: filename, type });
         formData.append('userId', userId);
 
-        saveImg(formData);
+        const savedImg = await saveImg(formData);
+        if (savedImg.success) {
+            showToast('success', 'New profile image saved!', '');
+        } else {
+            showToast('error', 'Sorry, we could not save your image.', '');
+        }
+
+        // Update the local state
+        if (key === 'profileImg') setProfileImg(imageUri);
+        if (key === 'idImg') setIdImg(imageUri);
+        if (key === 'passaportImg') setPassaportImg(imageUri);
     };
 
     const handleSubmit = async () => {
@@ -141,12 +144,6 @@ export default function Checkin({ closeWindow }) {
         for (const item of inputText) {
             const value = formData[item.key];
             let isValid = item.validator ? item.validator(value) : true;
-
-            console.log(`value: ${value}, is valid: ${isValid}`)
-
-            // if (value === item.placeholder) {
-            //     isValid = false;
-            // }
 
             if (item.key === "password" && value === "password") {
                 isValid = true;
@@ -173,7 +170,6 @@ export default function Checkin({ closeWindow }) {
         } else {
             setRequired(true);
             showToast('error', 'Please correct the errors in the form.', '');
-            console.log("Please correct the errors in the form.");
         }
     };
 
@@ -182,6 +178,7 @@ export default function Checkin({ closeWindow }) {
             <StatusBar barStyle="dark-content" />
             <AuthView
                 onProfileChange={(result) => handleImageChange('profileImg', result)}
+                profileImg={profileImg} // Pass the profile image URI
                 handleSubmit={handleSubmit}
                 errorMessage={required && 'Please correct the errors in the form.'}
                 closeWindow={closeWindow}
@@ -219,11 +216,13 @@ export default function Checkin({ closeWindow }) {
                     <ImageInput
                         onProfileChange={(result) => handleImageChange('idImg', result)}
                         label="Your ID image"
+                        imageUri={idImg} // Pass the ID image URI
                     />
                 }
                 <ImageInput
                     onProfileChange={(result) => handleImageChange('passaportImg', result)}
                     label="Your passport image"
+                    imageUri={passaportImg} // Pass the passport image URI
                 />
                 <ToogleButton
                     selected={formData.appearPermission}
