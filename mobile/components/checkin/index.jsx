@@ -1,19 +1,24 @@
 import React, { useContext, useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { FlatList, StyleSheet, View } from "react-native";
+import { getGuestDetails, saveGuestDetails, saveImg } from "./service";
+import { AuthContext } from '@/contexts/AuthContext/AuthContext.js';
 import { Colors } from "@/constants/Colors";
+
+// components
+import { FlatList, StyleSheet, View } from "react-native";
 import AuthView from "@/components/containers/AuthView";
 import CustomInput from "@/components/input/Input";
 import ToogleButton from "@/components/input/ToogleButton";
 import CustomSelect from "@/components/input/Select";
 import ImageInput from "@/components/input/ImageInput";
-import { getGuestDetails, saveGuestDetails, saveImg } from "./service";
-import { AuthContext } from '@/contexts/AuthContext/AuthContext.js';
+
+// validators
 import isValidEmail from "@/utils/isValidEmail";
 import isValidName from "@/utils/isValidName";
-import { countries } from "@/utils/countries";
 import isValidPhone from "@/utils/isValidPhone";
 import isValidPassword from "@/utils/isValidPassword.js";
+
+import { countries } from "@/utils/countries";
 import { showToast } from "../toast";
 
 export default function Checkin({ closeWindow }) {
@@ -102,6 +107,7 @@ export default function Checkin({ closeWindow }) {
                 setProfileImg(guestDetails.profileImg || null);
                 setIdImg(guestDetails.idImg || null);
                 setPassaportImg(guestDetails.passaportImg || null);
+
             } else {
                 showToast('error', 'Sorry, we could not find your checkin details', response.error);
             }
@@ -145,10 +151,6 @@ export default function Checkin({ closeWindow }) {
             const value = formData[item.key];
             let isValid = item.validator ? item.validator(value) : true;
 
-            if (item.key === "password" && value === "password") {
-                isValid = true;
-            }
-
             if (!isValid) {
                 allValid = false;
                 break;
@@ -178,7 +180,7 @@ export default function Checkin({ closeWindow }) {
             <StatusBar barStyle="dark-content" />
             <AuthView
                 onProfileChange={(result) => handleImageChange('profileImg', result)}
-                profileImg={profileImg} // Pass the profile image URI
+                profileImg={profileImg}
                 handleSubmit={handleSubmit}
                 errorMessage={required && 'Please correct the errors in the form.'}
                 closeWindow={closeWindow}
