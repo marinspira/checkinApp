@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { getGuestDetails, saveGuestDetails, saveImg } from "./service";
 import { AuthContext } from '@/contexts/AuthContext/AuthContext.js';
 import { Colors } from "@/constants/Colors";
 
@@ -20,9 +19,12 @@ import isValidPassword from "@/utils/isValidPassword.js";
 
 import { countries } from "@/utils/countries";
 import { showToast } from "../toast";
+import GuestProfileContext from "@/contexts/GuestProfileContext";
 
 export default function Checkin({ closeWindow }) {
+
     const { user } = useContext(AuthContext);
+    const { saveImg, saveGuestDetails, guestDetails, getGuestDetails, setGuestDetails } = useContext(GuestProfileContext)
 
     const [required, setRequired] = useState(false);
     const [hostelCountry, SetHostelCountry] = useState('');
@@ -83,39 +85,34 @@ export default function Checkin({ closeWindow }) {
         },
     ];
 
-    const guestDetails = {
-        ...formData,
-        userId: user._id,
-        profileImg,
-        idImg,
-        passaportImg,
-    };
-
     useEffect(() => {
-        const fetchGuestDetails = async () => {
+        if (guestDetails !== null) {
+            setFormData({
+                email: guestDetails.email || "",
+                fullName: guestDetails.fullName || "",
+                password: guestDetails.password || "",
+                phoneNumber: guestDetails.phoneNumber || "",
+                selectedCountry: guestDetails.selectedCountry || "",
+                appearPermission: guestDetails.appearPermission || true,
+            });
+            setProfileImg(guestDetails.profileImg || null);
+            setIdImg(guestDetails.idImg || null);
+            setPassaportImg(guestDetails.passaportImg || null);
 
-            const response = await getGuestDetails(user._id);
-            const guestDetails = response.guestDetails.guest;
+        } else {
+            const fetchGuestDetails = async () => {
 
-            if (response.success) {
-                setFormData(prev => ({
-                    ...prev,
-                    email: guestDetails.email || "",
-                    fullName: guestDetails.fullName || "",
-                    password: guestDetails.password || "",
-                    phoneNumber: guestDetails.phoneNumber || "",
-                    selectedCountry: guestDetails.selectedCountry || "",
-                    appearPermission: guestDetails.appearPermission || true,
-                }));
-                setProfileImg(guestDetails.profileImg || null);
-                setIdImg(guestDetails.idImg || null);
-                setPassaportImg(guestDetails.passaportImg || null);
-            } else {
-                showToast('error', 'Sorry, we could not find your checkin details', response.error);
+                const reqGuestDetails = await getGuestDetails(user._id);
+
+                if (reqGuestDetails.success) {
+                    setGuestDetails(reqGuestDetails)
+                } else {
+                    showToast('error', 'Error loading your data', '');
+                }
             }
-        };
-        fetchGuestDetails();
-    }, [closeWindow]);
+            fetchGuestDetails();
+        }
+    }, [guestDetails, user._id, closeWindow]);
 
     const handleInputChange = (key, value) => {
         setFormData(prev => ({ ...prev, [key]: value }));
@@ -166,6 +163,14 @@ export default function Checkin({ closeWindow }) {
 
         if (!isAnyFieldEmpty && allValid && isSelectValid) {
             setRequired(false);
+
+            const guestDetails = {
+                ...formData,
+                userId: user._id,
+                profileImg,
+                idImg,
+                passaportImg
+            }
 
             const reqGuest = await saveGuestDetails(guestDetails);
 
@@ -224,13 +229,13 @@ export default function Checkin({ closeWindow }) {
                     <ImageInput
                         onProfileChange={(result) => handleImageChange('idImg', result)}
                         label="Your ID image"
-                        imageUri={idImg} // Pass the ID image URI
+                        imageUri={idImg}
                     />
                 }
                 <ImageInput
                     onProfileChange={(result) => handleImageChange('passaportImg', result)}
                     label="Your passport image"
-                    imageUri={passaportImg} // Pass the passport image URI
+                    imageUri={passaportImg}
                 />
                 <ToogleButton
                     selected={formData.appearPermission}

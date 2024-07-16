@@ -6,10 +6,9 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { StyleSheet } from 'react-native';
 import Toast from "react-native-toast-message";
-import { Colors } from '@/constants/Colors';
 import { AuthProvider } from '@/contexts/AuthContext/AuthContext'
+import { GuestProfileProvider } from '@/contexts/GuestProfileContext/index'
 
 SplashScreen.preventAutoHideAsync();
 
@@ -33,11 +32,13 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <AuthProvider>
-        <Slot />
-        <Toast
+        <GuestProfileProvider>
+          <Slot />
+          <Toast
             position='top'
             topOffset={60}
-        />
+          />
+        </GuestProfileProvider>
       </AuthProvider>
     </ThemeProvider>
   );
