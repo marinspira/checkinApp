@@ -1,11 +1,19 @@
+import { Colors } from "@/constants/Colors";
 import { Link } from "expo-router";
 import { StyleSheet, Text, TextInput, Pressable, View } from "react-native";
 
-export default function Btn({ text, link, onPress, customStyle }) {
+export default function Btn({ text, link, onPress, customStyle, disabled }) {
     if (link) {
         return (
             <Link href={link}>
-                <Pressable style={[styles.btn, customStyle, { backgroundColor: "#000" }]}>
+                <Pressable
+                    disabled={disabled}
+                    style={[
+                        styles.btn,
+                        customStyle,
+                        disabled === true ? { backgroundColor: "#b3b3b3" } : { backgroundColor: "#000" }
+                    ]}
+                >
                     <Text style={styles.btnText}>{text}</Text>
                 </Pressable>
             </Link>
@@ -14,7 +22,15 @@ export default function Btn({ text, link, onPress, customStyle }) {
 
     if (onPress) {
         return (
-            <Pressable onPress={onPress} style={[styles.btn, customStyle, { backgroundColor: "#000" }]}>
+            <Pressable
+                disabled={disabled}
+                onPress={onPress}
+                style={[
+                    styles.btn,
+                    customStyle,
+                    disabled === true ? { backgroundColor: "#b3b3b3" } : { backgroundColor: "#000" }
+                ]}
+            >
                 <Text style={styles.btnText}>{text}</Text>
             </Pressable>
         )

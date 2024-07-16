@@ -30,6 +30,8 @@ export default function Checkin({ closeWindow }) {
     const [idImg, setIdImg] = useState(null);
     const [passaportImg, setPassaportImg] = useState(null);
 
+    const [btnDisable, setBtnDisable] = useState(true)
+
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -91,6 +93,7 @@ export default function Checkin({ closeWindow }) {
 
     useEffect(() => {
         const fetchGuestDetails = async () => {
+
             const response = await getGuestDetails(user._id);
             const guestDetails = response.guestDetails.guest;
 
@@ -107,16 +110,16 @@ export default function Checkin({ closeWindow }) {
                 setProfileImg(guestDetails.profileImg || null);
                 setIdImg(guestDetails.idImg || null);
                 setPassaportImg(guestDetails.passaportImg || null);
-
             } else {
                 showToast('error', 'Sorry, we could not find your checkin details', response.error);
             }
         };
         fetchGuestDetails();
-    }, []);
+    }, [closeWindow]);
 
     const handleInputChange = (key, value) => {
         setFormData(prev => ({ ...prev, [key]: value }));
+        setBtnDisable(false)
     };
 
     const handleImageChange = async (key, result) => {
@@ -157,9 +160,11 @@ export default function Checkin({ closeWindow }) {
             }
         }
 
+        let isSelectValid = formData.selectedCountry === '' ? false : true
+
         const isAnyFieldEmpty = inputText.some(item => item.required && (!formData[item.key] || formData[item.key] === item.placeholder));
 
-        if (!isAnyFieldEmpty && allValid) {
+        if (!isAnyFieldEmpty && allValid && isSelectValid) {
             setRequired(false);
 
             const reqGuest = await saveGuestDetails(guestDetails);
@@ -184,6 +189,7 @@ export default function Checkin({ closeWindow }) {
                 handleSubmit={handleSubmit}
                 errorMessage={required && 'Please correct the errors in the form.'}
                 closeWindow={closeWindow}
+                btnDisable={btnDisable}
             >
                 <FlatList
                     data={inputText}

@@ -15,7 +15,8 @@ export default function AuthView({
     alternativeText,
     onProfileChange,
     closeWindow,
-    profileImg
+    profileImg,
+    btnDisable
 }) {
     return (
         <SafeAreaView style={styles.container}>
@@ -44,7 +45,7 @@ export default function AuthView({
                                     {errorMessage}
                                 </Text>}
                         </View>
-                        {handleSubmit && <Btn customStyle={styles.btn} onPress={handleSubmit} text="Check in" />}
+                        {handleSubmit && <Btn disabled={btnDisable} customStyle={styles.btn} onPress={handleSubmit} text="Check in" />}
                         {alternativeText && <Text onPress={() => router.push(alternativeText.link)} style={styles.subtitle}>{alternativeText.texto}</Text>}
                     </View>
                 </KeyboardAvoidingView>

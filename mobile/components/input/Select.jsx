@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Modal, FlatList, StyleSheet } from 'react-native';
 import { Colors } from '../../constants/Colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -17,7 +17,7 @@ const CustomSelect = ({
         onSelect(value);
         setModalVisible(false);
     };
-
+    
     return (
         <View style={styles.container}>
             {label && <Text style={styles.label}>{label}</Text>}
