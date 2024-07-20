@@ -88,24 +88,23 @@ export default function Checkin({ closeWindow }) {
     useEffect(() => {
         if (guestDetails !== null) {
             setFormData({
-                email: guestDetails.email || "",
-                fullName: guestDetails.fullName || "",
-                password: guestDetails.password || "",
-                phoneNumber: guestDetails.phoneNumber || "",
-                selectedCountry: guestDetails.selectedCountry || "",
-                appearPermission: guestDetails.appearPermission || true,
+                email: guestDetails?.email || "",
+                fullName: guestDetails?.fullName || "",
+                password: guestDetails?.password || "",
+                phoneNumber: guestDetails?.phoneNumber || "",
+                selectedCountry: guestDetails?.selectedCountry || "",
+                appearPermission: guestDetails?.appearPermission || true,
             });
-            setProfileImg(guestDetails.profileImg || null);
-            setIdImg(guestDetails.idImg || null);
-            setPassaportImg(guestDetails.passaportImg || null);
+            setProfileImg(guestDetails?.profileImg || null);
+            setIdImg(guestDetails?.idImg || null);
+            setPassaportImg(guestDetails?.passaportImg || null);
 
         } else {
             const fetchGuestDetails = async () => {
-
                 const reqGuestDetails = await getGuestDetails(user._id);
 
                 if (reqGuestDetails.success) {
-                    setGuestDetails(reqGuestDetails)
+                    setGuestDetails(reqGuestDetails.guestDetails)
                 } else {
                     showToast('error', 'Error loading your data', '');
                 }
@@ -189,8 +188,10 @@ export default function Checkin({ closeWindow }) {
         <View style={styles.container}>
             <StatusBar barStyle="dark-content" />
             <AuthView
-                onProfileChange={(result) => handleImageChange('profileImg', result)}
-                profileImg={profileImg}
+                profileImg={{
+                    profileImg: profileImg,
+                    onProfileChange: (result) => handleImageChange('profileImg', result)
+                }}
                 handleSubmit={handleSubmit}
                 errorMessage={required && 'Please correct the errors in the form.'}
                 closeWindow={closeWindow}

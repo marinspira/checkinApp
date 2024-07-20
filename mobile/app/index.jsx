@@ -1,89 +1,30 @@
-import { StyleSheet, Text, View, SafeAreaView, Image, StatusBar } from 'react-native';
-import React, { useContext, useState } from 'react';
-import { AntDesign, MaterialIcons, Octicons } from '@expo/vector-icons';
-import { Link, Redirect } from 'expo-router';
-import AuthView from '../components/containers/AuthView.jsx';
+import React, { useContext, useEffect, useState } from 'react';
+import { Redirect } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
 import { AuthContext } from '@/contexts/AuthContext/AuthContext.js'
 
-export default function index() {
+export default function Index() {
+    const { user } = useContext(AuthContext);
+    const [isLoading, setIsLoading] = useState(true);
 
-    const { user } = useContext(AuthContext)
-    const [view, setView] = useState('');
+    useEffect(() => {
+        const prepareApp = async () => {
+            await SplashScreen.preventAutoHideAsync();
+            
+            await new Promise(resolve => setTimeout(resolve, 2000)); // Simula um carregamento de 2 segundos
 
-    if (user) {
-        return <Redirect href='/(guest)/home' />
+            setIsLoading(false);
+            await SplashScreen.hideAsync(); // Esconde o splash screen após o carregamento
+        };
+
+        prepareApp();
+    }, []);
+
+    if (isLoading) {
+        return null
+    } else if (user) {
+        return <Redirect href='/(guest)/home' />;
     } else {
-        return (
-            <AuthView logo={true}>
-                <StatusBar barStyle="dark-content" />
-                <Link href="/(auth)/signup">
-                    <View style={[styles.btn]}>
-                        <View>
-                            <Text style={styles.btnText}>Sou Hóspede</Text>
-                            <Text style={styles.btnTextBold}>Check in</Text>
-                        </View>
-                        <MaterialIcons name="airplane-ticket" size={30} color="black" />
-                    </View>
-                </Link>
-                <Link href="/(publicScreens)/volunteers">
-                    <View style={[styles.btn]}>
-                        <View>
-                            <Text style={styles.btnText}>Sou voluntário</Text>
-                            <Text style={styles.btnTextBold}>Voluntariados</Text>
-                        </View>
-                        <Octicons name="workflow" size={24} color="black" />
-                    </View>
-                </Link>
-                <Link href="/(auth)/owner">
-                    <View onPress={() => setView('owner')} style={[styles.btn]}>
-                        <View>
-                            <Text style={styles.btnText}>Sou Host</Text>
-                            <Text style={styles.btnTextBold}>Gerenciar</Text>
-                        </View>
-                        <AntDesign name="arrowright" size={24} color="black" />
-                    </View>
-                </Link>
-            </AuthView>
-        )
+        return <Redirect href='/(publicScreens)/home' />;
     }
-}
-
-const styles = StyleSheet.create({
-    safeArea: {
-        flex: 1,
-    },
-    salutation: {
-        fontSize: 25,
-        marginBottom: 40,
-    },
-    btn: {
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        borderColor: "#000",
-        marginBottom: 5,
-        width: 250,
-        borderRadius: 10,
-        flexDirection: "row",
-        alignItems: "center",
-        backgroundColor: "#fff",
-        justifyContent: "space-between",
-    },
-    btnText: {
-        fontFamily: "SpaceMono",
-        textTransform: "lowercase",
-        color: "#000",
-        fontSize: 17,
-    },
-    btnTextBold: {
-        fontSize: 20,
-        fontWeight: "600",
-    },
-    background: {
-        flex: 1,
-        resizeMode: 'cover',
-    },
-    overlay: {
-        ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    },
-});
+};

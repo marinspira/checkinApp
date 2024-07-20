@@ -1,4 +1,4 @@
-POST https://cb0e-171-6-238-84.ngrok-free.app/api/checkin/guest
+POST https://ad9a-171-6-242-116.ngrok-free.app/api/checkin/guest
 Content-Type: application/json
 
 {

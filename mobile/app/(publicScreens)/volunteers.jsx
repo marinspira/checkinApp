@@ -7,7 +7,7 @@ import WidgetJoinList from "@/components/joinWidgetList";
 import defaultImg from '@/assets/images/ilus.jpg';
 import profileDefault from '@/assets/images/unnamed.png'
 
-export default function Staff() {
+export default function Volunteers() {
 
     const positions = [
         {
@@ -27,7 +27,7 @@ export default function Staff() {
         <ScrollView style={styles.container}>
             <ContainerPaddingHorizontal>
                 <CustomInput icon={<Ionicons name="search-outline" size={24} color="black" />} placeholder="Where do you want to go?" />
-                <WidgetJoinList data={positions} btnText="Ver mais"/>
+                <WidgetJoinList data={positions} btnText="Ver mais" />
             </ContainerPaddingHorizontal>
         </ScrollView>
     )

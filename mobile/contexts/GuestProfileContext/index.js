@@ -25,10 +25,23 @@ export const GuestProfileProvider = ({ children }) => {
         try {
             const response = await axios.get(`${process.env.EXPO_PUBLIC_SERVER_ADDRESS}/api/checkin/guest/${userId}`);
 
-            const guestDetails = response.data;
-            setGuestDetails(guestDetails.guest)
+            const guest = response.data.guest
 
-            return { success: true };
+            function getFirstName(fullName) {
+                if (!fullName) return '';
+                const names = fullName.split(' ');
+                return names[0];
+            }
+
+            const firstName = getFirstName(guest.fullName)
+
+            const guestDetails = {
+                ...guest,
+                firstName
+            }
+            setGuestDetails(guestDetails)
+
+            return { success: true, guestDetails };
 
         } catch (error) {
             console.error('Get guest details service error', error);

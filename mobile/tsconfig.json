@@ -13,5 +13,5 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-, "app/(auth)/checkin.jsx", "components/checkin/index.jsx", "components/checkin/service.ts", "contexts/GuestProfileContext/index.js"  ]
+, "app/(publicScreens)/checkin.jsx", "components/checkin/index.jsx", "components/checkin/service.ts", "contexts/GuestProfileContext/index.js"  ]
 }

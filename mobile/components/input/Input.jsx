@@ -27,7 +27,9 @@ const CustomInput = ({
     const [phoneNumber, setPhoneNumber] = useState('');
 
     useEffect(() => {
-        setValue(defaultValue);
+        if (defaultValue) {
+            setValue(defaultValue);
+        }
     }, [defaultValue]);
 
     const handleChange = (text) => {
@@ -99,10 +101,10 @@ const CustomInput = ({
                     </View>
                 }
             </View>
-            {((error && (phoneNumber && defaultValue !== null))) &&
+            {((error && (value && defaultValue !== null))) &&
                 <Text style={styles.errorText}>{errorMessage}</Text>
             }
-            {(required && (phoneNumber === '')) &&
+            {(required && (value === '')) &&
                 <Text style={styles.errorText}>Please fill this field</Text>
             }
         </View>

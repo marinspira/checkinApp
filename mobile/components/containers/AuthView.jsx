@@ -13,44 +13,83 @@ export default function AuthView({
     mainText,
     handleSubmit,
     alternativeText,
-    onProfileChange,
-    closeWindow,
     profileImg,
-    btnDisable
+    closeWindow,
+    btnDisable,
+    alternativeStyle
 }) {
     return (
         <SafeAreaView style={styles.container}>
-            <View style={{ maxHeight: '75%' }}>
-                {closeWindow && <Ionicons onPress={closeWindow} name="close-circle-outline" style={styles.closeButton} size={35} color="black" />}
-                <KeyboardAvoidingView
-                    behavior={Platform.OS === "ios" ? "padding" : "height"}
-                    style={{ flex: 1 }}
-                >
+            <View style={handleSubmit ? { maxHeight: '75%' } : { flex: 1 }}>
+                {closeWindow &&
+                    <Ionicons
+                        onPress={closeWindow}
+                        name="close-circle-outline"
+                        style={styles.closeButton}
+                        size={35}
+                        color="black"
+                    />
+                }
+                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
+                    <View style={{ width: 340, color: 'white', height: 150, backgroundColor: 'white', left: 0, position: 'absolute', top: 120, borderTopLeftRadius: 100, borderBottomLeftRadius: 100 }} />
+                    {/* <View style={{ width: 340, color: 'white', height: 40, backgroundColor: 'white', right: 0, position: 'absolute', bottom: 43, borderTopRightRadius: 100, borderBottomRightRadius: 100 }} /> */}
                     <View style={styles.content}>
-                        {logo && <Image style={styles.logo} source={require('@/assets/images/logo.png')} />}
-                        <Text style={styles.title}>{mainText}</Text>
-                        {onProfileChange && <ImageInput profileImg={profileImg} onProfileChange={onProfileChange} style={styles.img} />}
-                        <View style={handleSubmit ? styles.form : ''}>
-                            <ScrollView showsVerticalScrollIndicator={false}>
+                        {mainText &&
+                            <Text style={styles.title}>
+                                {mainText}
+                            </Text>
+                        }
+                        {profileImg &&
+                            <ImageInput
+                                profileImg={profileImg.profileImg}
+                                onProfileChange={profileImg.onProfileChange}
+                                style={handleSubmit ? styles.img : ''}
+                                width={profileImg.width}
+                                height={profileImg.height}
+                            />
+                        }
+                        <View style={[handleSubmit ? styles.form : '']}>
+                            <ScrollView
+                                contentContainerStyle={[
+                                    alternativeStyle ? alternativeStyle : '',
+                                    logo ? { justifyContent: 'center', alignItems: 'center' } : '',
+                                ]}
+                                showsVerticalScrollIndicator={false}
+                            >
+                                {logo &&
+                                    <Image
+                                        style={styles.logo}
+                                        source={require('@/assets/images/logo.png')}
+                                    />
+                                }
                                 {children}
                             </ScrollView>
                             {errorMessage &&
-                                <Text style={{
-                                    color: 'red',
-                                    textAlign: 'center',
-                                    marginTop: 10,
-                                    marginBottom: -5
-                                }}
-                                >
+                                <Text style={styles.errorMessage}>
                                     {errorMessage}
-                                </Text>}
+                                </Text>
+                            }
                         </View>
-                        {handleSubmit && <Btn disabled={btnDisable} customStyle={styles.btn} onPress={handleSubmit} text="Check in" />}
-                        {alternativeText && <Text onPress={() => router.push(alternativeText.link)} style={styles.subtitle}>{alternativeText.texto}</Text>}
+                        {handleSubmit &&
+                            <Btn
+                                disabled={btnDisable}
+                                customStyle={styles.btn}
+                                onPress={handleSubmit}
+                                text="Check in"
+                            />
+                        }
+                        {alternativeText &&
+                            <Text
+                                onPress={() => router.push(alternativeText.link)}
+                                style={styles.subtitle}
+                            >
+                                {alternativeText.texto}
+                            </Text>
+                        }
                     </View>
                 </KeyboardAvoidingView>
-            </View>
-        </SafeAreaView>
+            </View >
+        </SafeAreaView >
     )
 }
 
@@ -62,6 +101,7 @@ const styles = StyleSheet.create({
         fontWeight: "700",
     },
     container: {
+        flex: 1,
         backgroundColor: Colors.green,
         display: 'flex',
         alignItems: 'center',
@@ -83,7 +123,6 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: Colors.green,
         gap: 10,
         maxWidth: 400,
     },
@@ -110,5 +149,11 @@ const styles = StyleSheet.create({
         right: -8,
         top: 25,
         zIndex: 3
+    },
+    errorMessage: {
+        color: 'red',
+        textAlign: 'center',
+        marginTop: 10,
+        marginBottom: -5
     }
 })

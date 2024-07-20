@@ -89,7 +89,7 @@ export default function Login() {
                 handleSubmit={handleSubmit}
                 mainText="Login"
                 alternativeText={{
-                    link: "/(auth)/signup",
+                    link: "/(publicScreens)/signup",
                     texto: 'Not have an account yet?'
                 }}
             >

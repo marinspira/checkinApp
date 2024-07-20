@@ -1,7 +1,6 @@
 import Guest from '../models/guest.model.js';
 import User from '../models/user.model.js';
 import { base64Encode, base64Decode } from '../utils/convertToBase64.js';
-import path from 'path'
 import { __dirname } from '../server.js';
 
 export const saveGuestDetails = async (req, res) => {
@@ -79,8 +78,6 @@ export const getGuestDetails = async (req, res) => {
                     profileImg: savedFilePath,
                 };
             }
-
-            console.log(guestDetails);
             res.status(200).json({ guest: guestDetails });
         } else {
             res.status(404).json({ error: "Guest details not found" });

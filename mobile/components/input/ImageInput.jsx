@@ -4,7 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 import defaultImg from '@/assets/images/unnamed.png';
 import { FontAwesome5 } from '@expo/vector-icons';
 
-const ImageInput = ({ onProfileChange, style, label, required, profileImg }) => {
+const ImageInput = ({ onProfileChange, style, label, required, profileImg, width, height }) => {
 
   const [imageInfo, setImageInfo] = useState({ uri: null, name: null });
 
@@ -76,8 +76,15 @@ const ImageInput = ({ onProfileChange, style, label, required, profileImg }) => 
           {(required && (imageInfo.name === null)) && <Text style={styles.errorText}>This field is required</Text>}
         </View>
       ) : (
-        <Pressable style={styles.btn} onPress={handleChoosePhoto}>
-          <Image source={imageInfo.uri ? { uri: imageInfo.uri } : defaultImg} style={styles.image} />
+        <Pressable style={styles.btn} onPress={onProfileChange ? handleChoosePhoto : null}>
+          <Image
+            source={imageInfo.uri ? { uri: imageInfo.uri } : defaultImg}
+            style={[
+              styles.image,
+              { width: width ? width : 100 },
+              { height: height ? height : 100 }
+            ]}
+          />
         </Pressable>
       )}
       {/* 
@@ -94,17 +101,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   image: {
-    width: 100,
-    height: 100,
-    borderRadius: 100 / 2,
+    borderRadius: 100,
     borderColor: "#fff",
     borderWidth: 5
   },
   btn: {
     width: 100,
     height: 100,
-    borderRadius: 100 / 2,
-    backgroundColor: 'red',
+    borderRadius: 100,
+    backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
   },
